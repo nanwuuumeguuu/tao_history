@@ -1,0 +1,16 @@
+id: C-0004
+text: 最小作用の原理は目的因の現れである。
+origin: 最初の依頼文（2026-11-12 のチャット）
+claim_type: INTERPRETATION
+status: contested
+confidence: unlikely
+evidence_for: []
+evidence_against:
+  - ref: "D. Glick, Synthese (2023), doi:10.1007/s11229-023-04251-x"
+    quote:
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: モーペルテュイ、ライプニッツ以来の読み方。現代の物理哲学では因果ではない制約と読む立場が有力。歴史的な読み方として紹介する。

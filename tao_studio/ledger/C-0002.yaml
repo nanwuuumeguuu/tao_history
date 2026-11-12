@@ -1,0 +1,18 @@
+id: C-0002
+text: 鏡面反射で光が検出器に届く確率は、鏡の全点を経由する経路の振幅の和で計算できる。
+origin: 最初の依頼文（2026-11-12 のチャット）
+claim_type: THEORY
+status: unverified
+confidence: highly likely
+evidence_for:
+  - ref: "R. P. Feynman, QED: The Strange Theory of Light and Matter (1985) 第2章"
+    quote:
+  - ref: "Taylor, Vokos, O'Meara, Thornber, Computers in Physics 12, 190 (1998)"
+    quote:
+evidence_against: []
+warrant: 経路の和と波動光学（フレネル積分）が同じ結果を与える。
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 内容は標準的だが、原文の引用を埋めるまでは unverified のままにする。

@@ -1,0 +1,10 @@
+# 大きな原本はGitに入れず、catalogに保存場所だけ書く
+raw/audio/*.wav
+raw/audio/*.m4a
+raw/audio/*.mp3
+raw/**/*.mp4
+raw/**/*.mov
+raw/workshop/assets/
+*.dfx
+renders/
+.DS_Store

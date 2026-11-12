@@ -1,0 +1,16 @@
+id: C-0001
+text: 目的因はソクラテスの概念である。
+origin: 最初の依頼文（2026-11-12 のチャット）
+claim_type: FACT
+status: refuted
+confidence: highly unlikely
+evidence_for: []
+evidence_against:
+  - ref: "アリストテレス『自然学』第2巻第3章、『形而上学』第5巻第2章（四原因）"
+    quote:
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 四原因はアリストテレスの学説。ソクラテスとの接点はプラトン『パイドン』97c-99d。原文の引用が未記入のため、一次資料で確かめて quote を埋めること。

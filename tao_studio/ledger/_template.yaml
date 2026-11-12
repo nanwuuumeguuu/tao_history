@@ -1,0 +1,17 @@
+id: C-0000
+text: 一文で、単独で真偽を問える形に。
+origin: raw/chat/2026-11-12.md        # 録音なら 話者・時刻も
+claim_type: FACT                      # FACT / THEORY / INTERPRETATION / METAPHOR / FIRST-PERSON / METAPHYSICAL
+status: unverified                    # unverified / verified / contested / refuted / cannot-judge
+confidence:                           # certain / highly likely / likely / possible / unlikely / highly unlikely / remote
+source_reliability:                   # A〜F。情報源そのものの信頼度（F=判断できない）
+info_credibility:                     # 1〜6。この主張の確からしさ（6=判断できない）。上と独立に付ける
+evidence_for: []                      # - ref: 著者, 題, 年, 頁 / DOI / URL
+                                      #   quote: "原文を一字一句"
+evidence_against: []
+warrant:                              # 証拠から主張へ渡る橋。暗黙の前提を書く
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note:

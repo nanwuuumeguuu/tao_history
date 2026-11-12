@@ -1,0 +1,14 @@
+id: C-0003
+text: 光子は実際にすべての経路を通っている。
+origin: 最初の依頼文（2026-11-12 のチャット）
+claim_type: INTERPRETATION
+status: contested
+confidence: possible
+evidence_for: []
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 計算の描像を実在の主張として読むかどうかで立場が分かれる。作品では「計算の上では」と書く。賛否それぞれの出典を追加すること。
