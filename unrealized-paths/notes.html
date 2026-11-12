@@ -104,6 +104,9 @@ dt{font-weight:700;color:var(--ink2);font-size:.82rem;padding-top:.15em} dd{marg
     <li><a href="#model">制作モデル</a></li>
     <li><a href="#prompts">プロンプト</a></li>
     <li><a href="#corpus">再利用できる素材</a></li>
+    <li><a href="#max">Adobe MAX 2026 の発表</a></li>
+    <li><a href="#clips">追加の参考動画 4 本</a></li>
+    <li><a href="#ground">着想を地に足のついたものにする仕組み</a></li>
     <li><a href="#gaps">確認できなかったこと</a></li>
   </ol></nav>
 </section>
@@ -428,9 +431,224 @@ audio/words.json の実測時刻と scene_plan.json から timeline.otio を書�
   </ul>
 </section>
 
+<section id="max">
+  <h2>Adobe MAX 2026 の発表（11 月 10 日）</h2>
+  <p>「昨日のプレスリリース」は、マイアミビーチで 11 月 10〜12 日に開かれている Adobe MAX 2026 の初日の発表とみられます。この節は<b>すべて検索結果の要約に基づいており、Adobe や各メディアのページを直接は開けていません</b>。</p>
+  <div class="note"><p><b>制作の組み方に効く点は一つです。</b>Adobe が Photoshop・Illustrator・Premiere・After Effects のデスクトップ版向けに「ローカル MCP 連携」を予告しました。Claude などの外部エージェントが、レイヤーやシーケンスを編集可能なまま操作できるというもので、基調講演では Claude が Premiere でポッドキャストを編集する実演があったと報じられています。ただし<b>非公開ベータは 2027 年初頭の予定で、いまは使えません</b>。対応エージェント、操作できる範囲、価格は未発表です。それまでは上の表のコミュニティ製 MCP が現実的な手段のままです。</p></div>
+  <div class="scroll"><table>
+    <tr><th>発表</th><th>状態</th><th>内容と制限</th></tr>
+    <tr><td>ローカル MCP 連携（Ps / Ai / Pr / Ae）</td><td><span class="tag un">予告のみ</span></td><td>外部エージェントからデスクトップ版を操作。非公開ベータは 2027 年初頭予定</td></tr>
+    <tr><td>Premiere 27.0 の AI アシスタント</td><td><span class="tag un">ベータ</span></td><td>自然言語で複数手順の編集（全クリップへの効果適用、マスクの追跡、色と露出の補正、複数カメラの同期）。実行前に消費クレジットの見積もりが出ない、と CineD が指摘</td></tr>
+    <tr><td>Generative Remove</td><td><span class="tag un">ベータ</span></td><td>マスクして追跡し、消す。1080p SDR・30fps・10 秒まで。1 秒あたり 40 クレジット</td></tr>
+    <tr><td>Enhance Audio（Enhance Speech V2 を含む）</td><td><span class="tag ok">27.0 に搭載</span></td><td>声・音楽・環境音・効果音を分離。V2 はクラウド処理で 1 分 2 クレジット、V1 は端末内で無料</td></tr>
+    <tr><td>重なった話者の分離（Separate Crosstalk）</td><td><span class="tag un">27.0 に記載、正式版かは未確認</span></td><td>話者 1・話者 2・背景の 3 トラックに分ける。1 秒〜10 分のクリップ</td></tr>
+    <tr><td>Generative Media Tool</td><td><span class="tag ok">搭載</span></td><td>タイムライン内で動画・効果音・環境音・音楽・画像を生成。Firefly のほか Google、Kling、Runway、Luma のモデルを選べる</td></tr>
+    <tr><td>Color Mode</td><td><span class="tag ok">正式版</span></td><td>新しいカラー作業画面。Lumetri カラーパネルは廃止と報じられています</td></tr>
+    <tr><td>After Effects の AI アシスタント</td><td><span class="tag un">ベータ</span></td><td>引き継いだプロジェクトの説明、エクスプレッションのデバッグ、アニメーションレイヤーの生成</td></tr>
+    <tr><td>Firefly の Plan Mode、常時稼働エージェント</td><td><span class="tag un">ベータ／予告</span></td><td>実行前にエージェントの計画を確認できる。素材整理や不具合検出のエージェントは 2027 年初頭にベータ予定</td></tr>
+  </table></div>
+  <p>添付のクリップ（会場で撮られた Premiere のデモ）のタブ名「Object Remove」「Enhance Speech 2」「Crosstalk」「Gen Task」「Color」は、この基調講演の構成と一致します。「Gen Task」という名前の機能は見つからず、Generative Media Tool のデモだろうというのは調査側の推測です。</p>
+  <p>報道：<a href="https://www.cined.com/adobe-premiere-27-0-released-color-mode-ai-assistant-panel-and-generative-audio-tools/">CineD</a>、<a href="https://petapixel.com/2026/11/10/premiere-update-brings-color-mode-out-of-beta-plus-generative-video-ai-audio-tools/">PetaPixel</a>、<a href="https://nofilmschool.com/adobe-local-mcp-integrations">No Film School（MCP）</a>、<a href="https://techcrunch.com/2026/11/10/adobe-adds-more-ai-to-its-products-and-launches-an-mcp/">TechCrunch</a>、<a href="https://ai.watch.impress.co.jp/docs/news/2154867.html">Impress AI Watch</a>。Adobe の発表は <a href="https://news.adobe.com/news/2026/11/adobe-powers-new-era-of-creativity">news.adobe.com</a>。</p>
+</section>
+
+<section id="clips">
+  <h2>追加の参考動画 4 本</h2>
+  <p>作品に入れる前提ではなく、技法と方法の獲得という観点で整理しました。</p>
+
+  <details open>
+    <summary><h3>スクロールで進む絵画空間（pear.no）</h3><span>「3D web」と題されているが、実体は別物</span></summary>
+    <div class="body"><dl>
+      <dt>正体</dt><dd>オスロの代理店 Pear の自社サイト <a href="https://pear.no/">pear.no</a>。同社の X 投稿によると、静止画は GPT Image 2、動きは Seedance 2、実装は Claude Code、Figma は不使用。<span class="tag un">投稿は要約のみ確認</span></dd>
+      <dt>仕組み</dt><dd>有志の再現コード（<a href="https://github.com/oosuhada/pear.no">oosuhada/pear.no</a>、ライセンスなし）を読む限り、リアルタイム 3D ではありません。AI 動画を WebP の連番にまとめ、スクロール位置で再生しています。依存は Vite と Playwright だけで、Three.js は入っていません。カーテンも布の計算ではなく生成動画とみられます。</dd>
+      <dt>技法の要点</dt><dd>① 全カットに同じ文体の指示を付けて絵柄をそろえる。② 動画の最初と最後のコマを画像で固定し、場面どうしをつなぐ。③ 8 コマに 1 コマだけ先に読み込み、残りを後から足す。</dd>
+      <dt>自動化</dt><dd><a href="https://github.com/oso95/scroll-world">oso95/scroll-world</a>（MIT）がほぼ同じ流れをスキル化しています。聞き取り → 静止画 → 寄りとつなぎの動画 → スクロール再生。6 場面で約 27 ドルとされています。本当のリアルタイム 3D を学ぶなら <a href="https://github.com/cloudai-x/threejs-skills">threejs-skills</a>（MIT）と Codrops の<a href="https://tympanus.net/codrops/2026/08/19/relighting-images-with-depth-maps-and-three-js/">深度マップの記事</a>。</dd>
+      <dt>この主題への応用</dt><dd>ショット A〜H を一枚のスクロール体験に並べられます。こちらは生成動画ではなく、計算した連番（TouchDesigner の書き出し）を同じ仕組みで再生すれば、絵の正確さを保てます。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>AI 生成の短編（緑の肌の人物と発光する毛の生き物）</h3><span>作者は特定できず</span></summary>
+    <div class="body"><dl>
+      <dt>作り方</dt><dd>画像モデルで人物の基準画を作る → 画像から動画へ（Kling、Seedance、Veo など）→ 高解像度化 → 編集。</dd>
+      <dt>一貫性</dt><dd>同じ参照画像を毎カットの最初のコマに渡し、人物の記述を一字一句変えずに全プロンプトへ貼る。記述を変えると数秒で別人になる、という報告があります。</dd>
+      <dt>自動化</dt><dd><a href="https://github.com/machina-exm/film-studio-skills">film-studio-skills</a>（ライセンス表記なし）：22 項目のショットカード、10 回中 10 回再現できるかを試す関門、15 ブロックのプロンプト。API は呼ばず、指示文を作るところまで。<a href="https://github.com/krowten/claude-media-generation">claude-media-generation</a>（MIT）は fal.ai 経由で生成まで行います。</dd>
+      <dt>費用</dt><dd>fal.ai の掲載値で、Kling 3.0 Pro が 1 秒 0.11 ドル前後、Seedance 2.0 が 1 秒 0.30 ドル前後。10 カットの短編で数十〜百数十ドルというのは調査側の概算です。</dd>
+      <dt>注意</dt><dd>毛や光ファイバーのような細部はカットごとに変わります。情報源の多くは販売元の記事で、モデル名は月単位で入れ替わります。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>Premiere の音声編集デモ</h3><span>Adobe MAX 2026 の基調講演</span></summary>
+    <div class="body"><dl>
+      <dt>内容</dt><dd>船上の騒音と音楽の中の声を取り出す（Enhance Audio）、重なった二人の声を分ける（Separate Crosstalk）。詳細は上の節。</dd>
+      <dt>使いどころ</dt><dd>対話や音声メモを素材にする場合の下ごしらえ。次の節の「録音から主張を取り出す」入口とつながります。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>ZBrush で球から馬を彫る</h3><span>手の技術。自動化できるのは周辺だけ</span></summary>
+    <div class="body"><dl>
+      <dt>技法</dt><dd>球に DynaMesh をかけて粘土のように伸ばし、形が決まったら ZRemesher で面を整え、細部を彫る。無料の代替は Blender のスカルプトモード、買い切りなら Nomad Sculpt。</dd>
+      <dt>自動化</dt><dd>公式の <a href="https://developers.maxon.net/docs/zbrush/py/2026_1_0/manuals/api_overview.html">ZBrush Python SDK</a> と、実験的な <a href="https://github.com/newsbubbles/zbrush-mcp">zbrush-mcp</a>（MIT、ビューポートの画像取得あり）があります。できるのはボタン操作、面の整理、書き出しまでで、筆圧を使った造形を任せた公開例は見つかりませんでした。</dd>
+      <dt>現実的な併用</dt><dd>画像から 3D を生成（Meshy、Tripo、Hunyuan3D。Blender MCP の <code>generate_3d</code> から呼べる）して土台にし、人が彫り直す。生成物は面が荒く解剖も弱いので、そのままでは使えません。</dd>
+      <dt>受け渡し</dt><dd>TouchDesigner は FBX・USD・OBJ（glTF は Blender で変換）。After Effects は GLB・OBJ を直接読めます。</dd>
+    </dl></div>
+  </details>
+</section>
+
+<section id="ground">
+  <h2>着想を地に足のついたものにする仕組み</h2>
+  <p>曖昧な会話を、学術の場でも通用する水準まで固めるための設計です。新しいリポジトリに置く前提で書いています。骨組みは、公開されている実践（Kurzgesagt の出典表、The New Yorker の校閲、情報分析の評価尺度、Karpathy の三層構成）を組み合わせたものです。六種類の分類そのものを示した既存の基準は見つからなかったので、そこは組み立てました。</p>
+
+  <h3>考え方</h3>
+  <ul>
+    <li><b>文を、一つずつ確かめられる主張に割る。</b>ぼやけた話は、種類の違う主張が一文に溶けているからぼやけます。</li>
+    <li><b>主張ごとに種類を決める。</b>事実なのか、解釈なのか、比喩なのか、体験なのか。種類が決まれば、何をもって確かめたことになるかも決まります。</li>
+    <li><b>「未確認」を最初の状態にする。</b>確かめた記録があるものだけが「確認済み」になります。Claude が自分で付けた確認済みの印は信用しない作りにします。</li>
+    <li><b>比喩や体験は捨てない。</b>そう名札を付けて残します。問題は比喩を使うことではなく、比喩を証拠として使うことです。</li>
+  </ul>
+
+  <h3>流れ</h3>
+  <pre class="mermaid">
+flowchart LR
+  A["入口：チャット／録音／手書き／SNS"] --> B["raw/ 原本をそのまま保存"]
+  B --> C["主張に割る"]
+  C --> D["種類を付ける"]
+  D --> E["問い直す"]
+  E --> F["文献で調べる"]
+  F --> G["別の目で検証"]
+  G --> H["ledger/ 主張台帳"]
+  H --> I["台本・ショット表"]
+  G -. 確かめられない .-> H
+  I -. 台帳の ID だけ引用できる .-> H
+  </pre>
+
+  <h3>主張の六種類</h3>
+  <div class="scroll"><table>
+    <tr><th>種類</th><th>例</th><th>確かめ方</th><th>作品での言い方</th></tr>
+    <tr><td>経験的事実</td><td>鏡では入射角と反射角が等しい</td><td>実験・観測の文献</td><td>断定してよい</td></tr>
+    <tr><td>確立した理論</td><td>反射の振幅は全経路の寄与の和で計算できる</td><td>教科書・総説</td><td>「理論では」「計算の上では」</td></tr>
+    <tr><td>解釈</td><td>光は実際にすべての経路を通っている／未来が過去に影響する</td><td>誰の立場か、対立する立場は何か</td><td>「〜と読む立場がある」。証拠としては使わない</td></tr>
+    <tr><td>比喩</td><td>選ばなかった人生は打ち消し合った経路のようだ</td><td>何を何にたとえているか、どこで破綻するか</td><td>「〜のように」。物理の主張に見せない</td></tr>
+    <tr><td>一人称の体験</td><td>瞑想中に時間が止まったように感じた</td><td>いつ、どの一回か、どう展開したか</td><td>「私には〜と感じられた」</td></tr>
+    <tr><td>形而上・価値</td><td>世界には目的がある</td><td>誰の議論か、前提は何か</td><td>哲学の主張として、出典つきで</td></tr>
+  </table></div>
+
+  <h3>最初のご依頼文で試す</h3>
+  <p>「ソクラテスの目的因がどのように未来を決定していくかを量子の世界の確率として鏡面反射の光子の通路の決定のように」という一文を割ると、こうなります。</p>
+  <div class="scroll"><table>
+    <tr><th>主張</th><th>種類</th><th>状態</th><th>直し</th></tr>
+    <tr><td>目的因はソクラテスの概念である</td><td>事実（哲学史）</td><td><span class="tag no">誤り</span></td><td>アリストテレス。ソクラテスとの接点は『パイドン』</td></tr>
+    <tr><td>鏡面反射の確率は全経路の振幅の和で決まる</td><td>確立した理論</td><td><span class="tag ok">確認済み</span></td><td>そのまま使える</td></tr>
+    <tr><td>光子は実際にすべての経路を通る</td><td>解釈</td><td><span class="tag un">争いあり</span></td><td>「計算の上では」</td></tr>
+    <tr><td>最小作用の原理は目的因の現れである</td><td>解釈（哲学）</td><td><span class="tag un">少数説</span></td><td>モーペルテュイ以来の読み方として紹介</td></tr>
+    <tr><td>目的が未来を決定する仕方は、経路の決まり方に似ている</td><td>比喩</td><td>―</td><td>比喩として明示すれば、作品の核になる</td></tr>
+  </table></div>
+  <p>こう割ると、作品が弱くなるのではなく、どこが土台でどこが跳躍かが見えます。跳躍は最後の一行だけで、そこを比喩として引き受ければ残りは堅く立ちます。</p>
+
+  <h3>台帳の 1 件</h3>
+<pre><code>id: C-0042
+text: 鏡面反射で光が届く確率は、鏡の全点を経由する経路の振幅の和で計算できる。
+origin: raw/2026-11-12_chat.md  （録音なら 話者・時刻）
+claim_type: THEORY          # FACT / THEORY / INTERPRETATION / METAPHOR / FIRST-PERSON / METAPHYSICAL
+status: verified            # unverified（既定）/ verified / contested / refuted / cannot-judge
+confidence: highly likely   # 決まった語彙から選ぶ
+source_reliability: A       # 情報源そのものの信頼度（A〜F）
+info_credibility: 1         # この主張の確からしさ（1〜6）。上と独立に付ける
+evidence_for:
+  - ref: Feynman, QED (1985) 第2章
+    quote: "（原文を一字一句）"
+evidence_against: []
+warrant: 経路積分と波動光学の計算が同じ結果を与える。
+verified_by: 人の名前 または 検証エージェント
+verified_on: 2026-11-12
+recheck_after: 2027-11-12
+used_in: [script.s6]</code></pre>
+  <p>情報源の信頼度と主張の確からしさを別々に付けるのは、情報分析で使われる方法です。有名な物理学者の発言でも、専門外の主張なら後者は低くなります。<code>warrant</code>（証拠から主張へ渡る橋）を書かせると、物理から精神へ飛ぶ箇所がここに現れます。</p>
+
+  <h3>緩衝になる部分</h3>
+  <div class="scroll"><table>
+    <tr><th>起こりうる失敗</th><th>防ぐ仕掛け</th></tr>
+    <tr><td>Claude が出典をでっち上げる</td><td>書く役と確かめる役を別のエージェントにする。確かめる役は文章を直せない。引用は原文つきで、DOI と URL を道具で照合（<a href="https://github.com/markrussinovich/refchecker">RefChecker</a>）</td></tr>
+    <tr><td>「確認済み」の印だけが付く</td><td><code>verified_by</code> と <code>verified_on</code> が埋まっていない主張は確認済みにできない</td></tr>
+    <tr><td>原本が書き換わる</td><td><code>raw/</code> は追記のみ。台帳は必ず原本の場所を指す</td></tr>
+    <tr><td>言葉が滑る（エネルギー、波動、場）</td><td>用語集に、物理での定義と、比喩として許す使い方を並べて書く</td></tr>
+    <tr><td>解釈が事実に化ける</td><td>台本は台帳の ID しか引用できない。種類が「解釈」「比喩」の主張には、決まった言い回しを強制</td></tr>
+    <tr><td>知識が古くなる、論文が撤回される</td><td><code>recheck_after</code> の日付で再確認。<a href="https://github.com/54yyyu/zotero-mcp">Zotero MCP</a> の撤回通知、<a href="https://github.com/blazickjp/arxiv-mcp-server">arXiv MCP</a> の主題の見張り</td></tr>
+    <tr><td>自分では気づけない穴</td><td>公開前に専門家に読んでもらう関門を一つ置く。公開後は訂正の記録を残す</td></tr>
+    <tr><td>調べられない日がある（今回のように接続が限られる）</td><td>「判断できない」を正規の状態として持つ。空欄を推測で埋めない</td></tr>
+  </table></div>
+
+  <h3>量子の言葉の点検表</h3>
+  <ol>
+    <li>「観測」「測定」は物理的な相互作用のこと。心のことではない。</li>
+    <li>意識が波束を収縮させる、は少数派の解釈で、発見ではない。</li>
+    <li>量子もつれは信号を運ばない。「すべてはつながっている」の根拠にならない。</li>
+    <li>エネルギー、周波数、波動、場は、単位を付けられないなら比喩の札を付ける。</li>
+    <li>量子の効果を脳や社会に当てはめるなら、なぜ壊れずに残るのかの議論が要る。</li>
+    <li>解釈の選択は解釈として書く。証拠として引かない。</li>
+    <li>アインシュタイン、ボーア、シュレーディンガーの言葉は一次資料で確かめる。</li>
+  </ol>
+  <p>参照：Sean Carroll、Philip Ball『Beyond Weird』、Philip Moriarty の<a href="https://iai.tv/articles/quantum-mysticism-is-a-mistake-philip-moriarty-auid-2437">論考</a>。点検表は調査した批判をまとめたものです。</p>
+
+  <h3>学術の側にある橋</h3>
+  <ul>
+    <li><b>神経現象学（ヴァレラ）。</b>訓練された一人称の報告と脳科学を、互いの制約として組み合わせる。</li>
+    <li><b>マイクロ現象学（プティマンジャン）。</b>特定の一回の体験を呼び戻し、「なぜ」ではなく「どのように」を聞き取る面接法。体験の主張を確かめる手順としてそのまま使えます。</li>
+    <li><b>Evan Thompson『Why I Am Not a Buddhist』。</b>仏教だけが特別に科学的だ、という言い過ぎへの歯止め。</li>
+    <li><b>Frank・Gleiser・Thompson『The Blind Spot』。</b>科学は人間の経験を磨いたもので、それを忘れると盲点が生まれる。反科学にならない科学主義批判。</li>
+    <li><b>Michel Bitbol。</b>量子力学を現象学から読む。解釈の札を付けて使う。</li>
+    <li><b>テレオノミー（ピッテンドリー、マイヤー）。</b>目的因を持ち込まずに、目的に向かうように見える振る舞いを語る語彙。目的因の章の現代側の足場になります。</li>
+  </ul>
+
+  <h3>問い直しの指示文</h3>
+<pre><code># 主張に割って種類を付ける（私の下書き・未検証）
+raw/ の新しいファイルを読み、一文ずつ、単独で真偽を問える主張に分けてください。
+それぞれに claim_type を一つ付け、迷ったものは二つ候補を挙げて理由を書いてください。
+status はすべて unverified で始めます。あなた自身の知識で verified にしてはいけません。
+
+# 操作化する（私の下書き・未検証）
+この考えを、物理学者が受け入れる一文に言い直してください。
+それが偽だったら、どんな観測が違ってきますか。
+違いが無いなら、比喩・形而上・一人称のどれかに分類し直し、
+比喩なら「何を何にたとえているか」と「どこでたとえが壊れるか」を書いてください。</code></pre>
+<pre><code># 公開されている原文（danielmiessler/fabric の analyze_claims より）
+Separate the truth claims from the arguments in your mind.
+CLAIM: / CLAIM SUPPORT EVIDENCE: / CLAIM REFUTATION EVIDENCE: / LOGICAL FALLACIES:
+CLAIM RATING: A (Definitely True) B (High) C (Medium) D (Low) F (Definitely False)
+Provide references for each, and DO NOT make any of those up.
+
+# 同 dialog_with_socrates より
+You do not share your beliefs, but draw your interlocutor into a discussion
+around his or her thoughts and beliefs.</code></pre>
+
+  <h3>新しいリポジトリの構成</h3>
+<pre><code>ground/
+├─ CLAUDE.md            規則：未確認が既定／台本は台帳 ID のみ引用／原本は追記のみ
+├─ raw/                 原本。chat/ audio/ sketch/ sns/ に分ける
+├─ ledger/              主張 1 件 1 ファイル（上の形式）
+├─ glossary.md          用語ごとに「物理の定義」「許す比喩」「使わない言い方」
+├─ sources/             Zotero と同期した文献。引用の原文つき
+├─ wiki/                主題ごとのまとめ（Claude が維持、台帳にリンク）
+├─ techniques/          技法の棚。1 技法 1 ファイル：何か・道具・手順・自動化・ライセンス
+├─ works/               作品ごとに script, scene_plan, 出典表, 訂正記録
+└─ .claude/
+    ├─ skills/          ingest（取り込み）, split（主張に割る）, verify, lint, technique-card
+    └─ agents/          verifier.md, skeptic.md, fact-checker.md</code></pre>
+  <div class="scroll"><table>
+    <tr><th>入口</th><th>取り込み方</th></tr>
+    <tr><td>Claude とのチャット</td><td>会話の終わりに要点ではなく発言そのものを <code>raw/chat/</code> へ書き出す</td></tr>
+    <tr><td>録音</td><td><a href="https://github.com/m-bain/whisperX">WhisperX</a>（話者の区別と単語ごとの時刻つき）で文字にする。台帳は「誰が何分何秒に言ったか」を指せる</td></tr>
+    <tr><td>手書き・スケッチ</td><td>写真を <code>raw/sketch/</code> に置き、Claude に読み取らせる。読み取りに自信のない箇所は印を付けさせる</td></tr>
+    <tr><td>SNS・動画</td><td>画面収録かリンクとキャプション。技法は <code>techniques/</code> のカードに、内容の主張は台帳に分ける</td></tr>
+  </table></div>
+  <p>技法の棚（<code>techniques/</code>）には、この頁の「映像候補」と「追加の参考動画」の各項目がそのまま最初のカードになります。</p>
+</section>
+
 <section id="gaps">
   <h2>確認できなかったこと</h2>
   <ul>
+    <li><b>Adobe MAX の節と、着想を固める仕組みの節の多くは、検索結果の要約に基づいています。</b>直接読めたのは GitHub 上のものだけです。数字と引用は、使う前に元のページで確かめてください。</li>
     <li><b>Instagram の 5 本は見られませんでした。</b>このセッションのネットワーク設定で <code>www.instagram.com</code> が許可されておらず、検索でも内容を特定できていません。キャプションか画面収録をいただければ反映します。</li>
     <li><b>直接読めたのは主に GitHub と Notch のマニュアルです。</b>Adobe・Derivative の公式ブログ、Zenn、Qiita、note、Shadertoy 本体は読めず、検索結果の要約に頼っています。Shadertoy の個別のライセンス表記は未確認です。</li>
     <li><b>科学・哲学のエッセイ映像や GLSL の抽象作品を、エージェントで最後まで作った公開の舞台裏は見つかりませんでした。</b>近いのは、コードだけで作った短編（<a href="https://github.com/ericfu-tianchi/claude-video">claude-video</a>）、解説動画の量産パイプライン（<a href="https://github.com/calesthio/OpenMontage">OpenMontage</a>）、Manim の制作手順（<a href="https://github.com/Yusuke710/manim-skill">manim-skill</a>）です。上の制作モデルはそれらの型をこの主題に当てはめたものです。</li>
