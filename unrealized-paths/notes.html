@@ -1,0 +1,514 @@
+<title>起こらなかった経路 制作ノート</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* layout: 一本の読み物。冒頭に動く鏡の実験、その下に目次つきの章立て。本文は約38全角字幅、表とコードだけが横に広がる */
+:root{
+  --paper:#f3f5f6; --sheet:#ffffff; --ink:#14181d; --ink2:#4d5661; --rule:#d5dadf;
+  --accent:#b9501a; --accent-soft:#f6e6dc; --ok:#1d6b4f; --warn:#8a5a00; --code:#eceff1;
+  --display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0e1114; --sheet:#161a1f; --ink:#e7e9eb; --ink2:#9aa4ae; --rule:#2b323a;
+  --accent:#ee8a48; --accent-soft:#33221a; --ok:#63c7a0; --warn:#e0b45a; --code:#1c2228; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#0e1114; --sheet:#161a1f; --ink:#e7e9eb; --ink2:#9aa4ae; --rule:#2b323a;
+  --accent:#ee8a48; --accent-soft:#33221a; --ok:#63c7a0; --warn:#e0b45a; --code:#1c2228; color-scheme:dark }
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.85;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.35;margin:0}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:700;letter-spacing:.02em}
+h2{font-size:clamp(1.45rem,3.6vw,2rem);font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0;max-width:40em} ul,ol{margin:0;padding-left:1.3em;max-width:40em} li+li{margin-top:.3em}
+a{color:var(--accent);text-underline-offset:3px} a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:18px}
+.lede{font-size:1.05rem;color:var(--ink2)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;color:var(--ink2)}
+code{font-family:var(--mono);font-size:.86em;background:var(--code);padding:.08em .35em;border-radius:3px;overflow-wrap:anywhere}
+pre{margin:0;background:var(--code);border:1px solid var(--rule);border-radius:4px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--rule)}
+th{font-weight:700;font-size:.78rem;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
+td{min-width:9em}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:0 .5em;border-radius:3px;border:1px solid currentColor;line-height:1.6;white-space:nowrap}
+.tag.ok{color:var(--ok)} .tag.un{color:var(--warn)} .tag.no{color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;max-width:44em}
+.note p{max-width:none}
+/* hero */
+.hero{gap:20px}
+.lab{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.lab-row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.lab-row>div{min-width:0}
+.scene{flex:1 1 420px} .spiral{flex:0 0 240px;max-width:100%}
+canvas{display:block;width:100%;max-width:100%}
+.cap{font-size:.8rem;color:var(--ink2);line-height:1.6;margin-top:6px}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:.88rem}
+.ctl label{display:flex;gap:8px;align-items:center}
+.ctl input[type=range]{width:150px;accent-color:var(--accent)} .ctl input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px}
+.read{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.read b{color:var(--accent)}
+nav ol{display:flex;flex-wrap:wrap;gap:6px 22px;list-style:none;padding:0;max-width:none;font-size:.9rem}
+nav li+li{margin:0}
+/* shots */
+details{background:var(--sheet);border:1px solid var(--rule);border-radius:4px}
+details+details{margin-top:-8px}
+summary{cursor:pointer;padding:14px 16px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary h3{flex:1 1 14em} summary span{font-size:.85rem;color:var(--ink2)}
+summary::before{content:"＋";font-family:var(--mono);color:var(--accent)} details[open]>summary::before{content:"－"}
+.body{padding:4px 16px 18px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--rule);padding-top:14px}
+dl{margin:0;display:grid;grid-template-columns:minmax(5em,7em) minmax(0,1fr);gap:8px 16px;font-size:.93rem}
+dt{font-weight:700;color:var(--ink2);font-size:.82rem;padding-top:.15em} dd{margin:0;min-width:0}
+@media (max-width:520px){dl{grid-template-columns:1fr;gap:2px} dd{margin-bottom:8px}}
+.mermaid{background:var(--sheet);border:1px solid var(--rule)}
+</style>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="eyebrow">制作ノート／2026-11-12 調査</div>
+  <h1>起こらなかった経路</h1>
+  <p class="lede">トポロジー、ヒルベルト空間、目的因。この三つを一本の映像にするための表現技法と、Claude から TouchDesigner・After Effects・Notch を動かす制作の組み方をまとめました。下の図は作品の中心になるショットを実際に計算したものです。</p>
+
+  <div class="lab">
+    <div class="lab-row">
+      <div class="scene">
+        <canvas id="scene" aria-label="光源から鏡の各点を経て検出器に届く経路の束。各経路は位相で色分けされ、足し合わせで残る経路だけが濃く描かれる"></canvas>
+        <div class="cap">光は鏡のどの点でも反射してよいものとして、全経路に「回る矢印」を割り当てます。色は矢印の向き（位相）。濃い線は、隣どうしの矢印がそろって打ち消されずに残る経路です。</div>
+      </div>
+      <div class="spiral">
+        <canvas id="spiral" aria-label="全経路の矢印を頭から尾へつないだコルニュ螺旋と、その合計を示す矢印"></canvas>
+        <div class="cap">矢印を順につなぐと両端が渦を巻きます（コルニュ螺旋）。太い線が合計で、その長さの二乗が検出器の明るさです。</div>
+      </div>
+    </div>
+    <div class="ctl">
+      <label for="lam">波長 <input id="lam" type="range" min="8" max="60" value="26"></label>
+      <label for="scrape"><input id="scrape" type="checkbox"> 打ち消す部分の鏡を削る</label>
+      <label for="spin"><input id="spin" type="checkbox"> 時間を進める</label>
+      <span class="read">検出器の明るさ <b id="pow">×1.0</b></span>
+    </div>
+  </div>
+  <p>「鏡を削る」を入れると、逆向きの矢印を持つ経路だけが消え、端の経路まで光りはじめます。選ばれなかった経路は存在しなかったのではなく、互いに打ち消し合っていただけだ、という絵になります。この計算は 20 行ほどの GLSL でそのまま TouchDesigner に移せます（<a href="#shots">ショット A</a>）。</p>
+
+  <nav aria-label="目次"><ol>
+    <li><a href="#now">いま可能なこと</a></li>
+    <li><a href="#stack">連携の構成</a></li>
+    <li><a href="#shots">映像候補とレシピ</a></li>
+    <li><a href="#film">一本の完成形と台本</a></li>
+    <li><a href="#model">制作モデル</a></li>
+    <li><a href="#prompts">プロンプト</a></li>
+    <li><a href="#corpus">再利用できる素材</a></li>
+    <li><a href="#gaps">確認できなかったこと</a></li>
+  </ol></nav>
+</section>
+
+<section id="now">
+  <h2>いま可能なこと</h2>
+  <p>2026 年 11 月時点で、Claude からアプリを直接操作できる範囲はツールごとに大きく違います。「確認」の列は、今回リポジトリやマニュアルを直接読めたかどうかです。</p>
+  <div class="scroll"><table>
+    <tr><th>ツール</th><th>Claude からの操作</th><th>できること</th><th>できないこと・注意</th><th>確認</th></tr>
+    <tr><td><b>TouchDesigner</b></td><td>公式 MCP <a href="https://github.com/TouchDesigner/TDMCP">TDMCP</a>（公開ベータ）＋公式スキル <a href="https://github.com/TouchDesigner/TDMCPSkills">TDMCPSkills</a></td><td>ノード作成・配線・パラメータ・DAT 書き換え・エラー取得・出力画像の確認・Python 実行。26 ツール</td><td>TD 2025.33230 以降が必要。<code>execute_code</code> はシェル同等の権限。非商用版は 1280×1280 まで</td><td><span class="tag ok">直接確認</span></td></tr>
+    <tr><td><b>After Effects</b></td><td>コミュニティ MCP。<a href="https://github.com/kumoproductions/mcp-aftereffects">kumoproductions/mcp-aftereffects</a>、<a href="https://github.com/Dakkshin/after-effects-mcp">Dakkshin</a>、<a href="https://github.com/Arman-Luthra/aftr">aftr</a></td><td>コンポ・レイヤー・キーフレーム・エクスプレッション・1 フレーム書き出し・レンダリング</td><td>公式の AE 用 MCP はなし。ダイアログが出ると止まる。ExtendScript は ES3 のみ。呼び出しは直列で</td><td><span class="tag ok">直接確認</span></td></tr>
+    <tr><td><b>Premiere Pro</b></td><td>コミュニティ MCP。<a href="https://github.com/hetpatel-11/Adobe_Premiere_Pro_MCP">hetpatel-11</a>（283 ツール）、<a href="https://github.com/mikechambers/adb-mcp">adb-mcp</a></td><td>読み込み・シーケンス作成・カット・トランジション・FCP XML 書き出し</td><td>テロップ／タイトルは API の制約が大きく MOGRT 素材が必要。OTIO か FCP XML を書かせて読み込む方が安定</td><td><span class="tag ok">直接確認</span></td></tr>
+    <tr><td><b>Adobe 公式コネクタ</b></td><td>Adobe for creativity（このセッションにも接続済み）</td><td>JSON タイムラインからの簡易レンダリング（最大 10 分）、リサイズ、1 フレーム確認、音声分離、画像編集、Firefly</td><td>デスクトップ版 AE／Premiere は操作できない。エフェクト・文字・キーフレームなし</td><td><span class="tag ok">直接確認</span></td></tr>
+    <tr><td><b>Notch</b></td><td>本体を操作する MCP はなし。公式はマニュアル検索 MCP のみ</td><td>Claude が HLSL カスタムシェーダー（<code>.fx</code>、保存で自動再読込）と JavaScript ノードを書く。公開パラメータを OSC か TouchDesigner の Notch TOP 経由で動かす</td><td>ノードグラフは人が組む。<code>.dfx</code> はバイナリで Claude は読めない</td><td><span class="tag ok">直接確認</span></td></tr>
+    <tr><td><b>Blender</b></td><td><a href="https://github.com/ahujasid/blender-mcp">blender-mcp</a></td><td>Python 実行、ビューポートの画像確認</td><td>無料。パラメトリック曲面や分岐樹のメッシュ生成に向く</td><td><span class="tag ok">直接確認</span></td></tr>
+  </table></div>
+  <div class="note"><p><b>組み方の結論。</b>絵づくりの主軸は TouchDesigner（公式 MCP があり、作る→見る→直すの往復ができる）。Notch は Claude が書いたシェーダーを差し込む仕上げ用。After Effects は合成と文字、Premiere は Claude が書いたタイムラインファイルを読み込むだけにすると、壊れやすい部分を避けられます。</p></div>
+</section>
+
+<section id="stack">
+  <h2>連携の構成</h2>
+  <p>公開されている完成度の高い事例（OpenMontage、video-use、claude-faceless-shorts-creator など）に共通するのは、プログラムではなくエージェント自身が進行役になり、段階ごとに決まった形式のファイルを残していく作りです。それをこの作品向けに置き換えると次のようになります。</p>
+  <pre class="mermaid">
+flowchart TD
+  H["人：主題・承認・最終の目と耳"] --> C["Claude Code（進行役）"]
+  C --> S["script.json 台本"]
+  S --> P["scene_plan.json ショット表"]
+  P --> TD["TouchDesigner（TDMCP）シェーダーと粒子"]
+  P --> BL["Blender（MCP）曲面と分岐メッシュ"]
+  P --> NO["Notch（.fx を書く＋OSC）"]
+  S --> VO["ElevenLabs 朗読と単語の時刻"]
+  TD --> R["renders/ 連番画像"]
+  BL --> R
+  NO --> R
+  R --> AE["After Effects（MCP）合成と文字"]
+  VO --> OT["timeline.otio"]
+  AE --> OT
+  OT --> PR["Premiere / Resolve 読み込みと書き出し"]
+  R -. 静止画を見て直す .-> C
+  </pre>
+  <ul>
+    <li><b>台本とショット表が唯一の正。</b>どのアプリの作業も、この二つのファイルの ID と秒数を参照します。</li>
+    <li><b>朗読を先に作り、絵は実測した音の長さに合わせる。</b>Manim 系の事例で定着しているやり方です。</li>
+    <li><b>見られないものは測る。</b>Claude は音を聴けないので、音量は <code>ffmpeg -af ebur128</code> の数値で確認し、最終判断は人の耳に残します。</li>
+    <li><b>直す回数に上限を置く。</b>事例では自己評価 3 回まで、レビュー 2 往復までが目安になっています。</li>
+  </ul>
+</section>
+
+<section id="shots">
+  <h2>映像候補とレシピ</h2>
+  <p>八つのショット候補です。A〜C が主題の核、D〜H は章をつなぐ素材です。技法の対応づけは調査した資料をもとに私が組み立てたもので、TouchDesigner や Notch 用の既製プロジェクトはどの主題でも見つかりませんでした。</p>
+
+  <details open>
+    <summary><h3>A　鏡とすべての経路</h3><span>目的因の章の中心／上の図の本番版</span></summary>
+    <div class="body"><dl>
+      <dt>意味</dt><dd>光は「最短の道を知っていた」ように見える。実際には全経路の矢印の合計で、残るのが最短時間の近くだけ。ファインマンの QED 講義の鏡の話です。</dd>
+      <dt>技法</dt><dd>経路ごとの位相を色相にした細線を加算合成。隣接経路の矢印のそろい具合を明るさにする。鏡の下に小さな時計の列、画面の隅にコルニュ螺旋。</dd>
+      <dt>数式</dt><dd>経路長 <code>L(x)=r1+r2</code>、矢印 <code>exp(i·k·L)</code>、<code>k=2π/λ</code>。<code>L'(x)=0</code> が入射角＝反射角。削る条件は <code>cos(k·L−φ0)&gt;0</code> の点だけ残す。波長は鏡の長さの 1/30〜1/100 に誇張すると渦が見えます。</dd>
+      <dt>作り方</dt><dd>TouchDesigner の GLSL TOP 一枚で場全体（検出器の位置＝画素）を計算し、経路の線は別の GLSL TOP か instancing で重ねる。波長を 3 つ以上で計算して RGB に足すと、削った鏡が虹を出します。</dd>
+      <dt>再利用元</dt><dd>既製のシェーダーは見つからず。参考は Taylor ほか「<a href="https://eftaylor.com/feynman.html">Teaching Feynman's sum-over-paths quantum theory</a>」。</dd>
+    </dl>
+<pre><code>// GLSL TOP 用の核。uniform: S, D(=画素でも可), k, wt, a, b, scrape, phi0
+vec2 A = vec2(0.);
+float dx = (b - a) / float(N);
+for (int j = 0; j &lt; N; j++) {
+  float x  = mix(a, b, (float(j) + .5) / float(N));
+  float r1 = length(vec2(x - S.x, S.y)), r2 = length(vec2(x - D.x, D.y));
+  float L  = r1 + r2, dL = (x - S.x)/r1 + (x - D.x)/r2;
+  float z  = .5 * k * dL * dx;
+  float w  = dx * (abs(z) &lt; 1e-4 ? 1. : sin(z)/z);        // 区間内の位相変化を補正
+  float keep = scrape ? step(0., cos(k*L - phi0)) : 1.;    // 鏡を削る
+  A += keep * w * vec2(cos(k*L - wt), sin(k*L - wt));
+}
+float I = dot(A, A);   // 明るさ。経路 j の色相は fract((k*L - wt)/6.2831853)</code></pre>
+    </div>
+  </details>
+
+  <details>
+    <summary><h3>B　終わりから来る波</h3><span>「未来が経路を決める」をそのまま絵にする</span></summary>
+    <div class="body"><dl>
+      <dt>意味</dt><dd>光源から広がる波と、検出器から時間を逆向きにさかのぼる波。二つが重なるところだけが光る。二状態ベクトル形式や交流解釈の図式です。</dd>
+      <dt>技法</dt><dd>2D のシュレーディンガー方程式（または波動方程式）を二回解き、片方を逆再生。明るさ＝<code>ψ前 × ψ後*</code> の絶対値、色相＝位相差。</dd>
+      <dt>作り方</dt><dd>GLSL TOP と Feedback TOP の往復計算。<code>rgba32float</code> を使う（8bit は 0〜1 に切られる）。逆向きの波は別に連番で書き出して逆再生するのが簡単です。</dd>
+      <dt>再利用元</dt><dd><a href="https://github.com/quantum-visualizations/qmsolve">qmsolve</a>（BSD-3、Python で先に検証）、<a href="https://github.com/marl0ny/QM-Simulator-2D">QM-Simulator-2D</a>（WebGL、ライセンス種別は未確認）、解説 <a href="https://davidar.io/post/quantum-glsl">Shaders of Schrödinger</a>。</dd>
+      <dt>注意</dt><dd>逆因果は解釈の一つで、実験で確かめられた事実ではありません。ナレーションは「〜と読むこともできる」の形に。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>C　歩く人の分岐樹</h3><span>添付の参考動画 2 本の技法</span></summary>
+    <div class="body"><dl>
+      <dt>見たもの</dt><dd>白地に、歩く人物の残像が帯になり、その帯が枝分かれして樹になる。人物にだけ銅色が残り、軌跡は墨色。引きでは樹、寄りでは連続写真に見える。</dd>
+      <dt>意味</dt><dd>多世界の分岐、あるいは選ばなかった人生。実現した枝だけ濃く、他は消さずに薄く残す。</dd>
+      <dt>技法</dt><dd>歩行アニメーションを時間をずらして曲線上に大量に複製する（クロノフォトグラフィ）。枝の太さ＝振幅の二乗、分岐点で複製が二手に分かれる。</dd>
+      <dt>作り方</dt><dd>① Blender で分岐曲線を生成（再帰 or L-system を Python で）。② 歩行素材は自分で撮った横歩きを切り抜くか、ライセンスを確認した歩行アニメを使う。③ TouchDesigner の Geometry COMP instancing で、曲線上の位置と時間オフセットを各コピーに渡す。④ 乗算合成で白地に重ねる。After Effects だけで作るなら、パスに沿わせた人物レイヤーに「エコー」。</dd>
+      <dt>発展</dt><dd>ショット A の経路の束をこの樹に置き換えると、人の歩みと光の経路が同じ絵になります。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>D　ホップ・ファイブレーション</h3><span>トポロジーの章の導入</span></summary>
+    <div class="body"><dl>
+      <dt>意味</dt><dd>球面の一点が、四次元の球の中の一つの円に対応する。どの二つの円も必ず一度だけ絡む。「一つの状態の背後にある位相の輪」としてヒルベルト空間の章にもつながります（量子ビットの状態空間がこの構造です）。</dd>
+      <dt>数式</dt><dd><code>q(t)=(cos(θ/2)·e^{i(t+φ)/2}, sin(θ/2)·e^{i(t−φ)/2})</code> を <code>(x,y,z)/(1−w)</code> で投影。</dd>
+      <dt>作り方</dt><dd>円をチューブとして instancing。色相＝球面上の経度。球面上の点を緯線や螺旋に沿って動かし、投影前に四次元回転（xw 面と yz 面）をかける。</dd>
+      <dt>再利用元</dt><dd><a href="https://github.com/mwalczyk/hopf">mwalczyk/hopf</a>（CC BY 4.0、.obj 書き出し可）、<a href="https://nilesjohnson.net/hopf-production.html">Niles Johnson の制作ノート</a>。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>E　波束と交差しない流線</h3><span>ヒルベルト空間の章の中心</span></summary>
+    <div class="body"><dl>
+      <dt>意味</dt><dd>波は二つのスリットの両方を通る。粒子の流線（ボーム軌道）は決して交わらず、編まれた髪のようになる。</dd>
+      <dt>技法</dt><dd>色相＝位相、明度＝確率密度。粒子は <code>v=(ħ/m)·Im(∇ψ/ψ)</code> で流し、Feedback で軌跡を残す。</dd>
+      <dt>作り方</dt><dd>B と同じ計算基盤。粒子は GLSL POP か、位置を持つテクスチャの往復計算。</dd>
+      <dt>再利用元</dt><dd><a href="https://github.com/artmenlope/double-slit-2d-schrodinger">double-slit-2d-schrodinger</a>（MIT）、qmsolve。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>F　双曲空間と四次元多胞体</h3><span>空間そのものが違う、という体感</span></summary>
+    <div class="body"><dl>
+      <dt>技法</dt><dd>2D は円反転のくり返しで画素を基本領域に折りたたむ。3D は測地線に沿ったレイマーチング。多胞体は頂点を四次元で回して立体射影し、辺を円弧で描く。</dd>
+      <dt>作り方</dt><dd>TouchDesigner なら <a href="https://github.com/t3kt/raytk">RayTK</a>（CC BY 4.0）。Notch なら Procedural ノード群と Procedural Raytracer が SDF のレイマーチングに当たります。</dd>
+      <dt>再利用元</dt><dd><a href="https://github.com/roice3/Honeycombs">roice3/Honeycombs</a>（MIT）、論文 <a href="https://arxiv.org/abs/2010.15801v1">Ray-marching Thurston geometries</a>。<a href="https://www.github.com/henryseg/non-euclidean_VR">non-euclidean_VR</a> は GPL v3 なので、組み込むと作品のコードも同じ条件になります。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>G　リーマン面と被覆</h3><span>一周しても元に戻らない場所</span></summary>
+    <div class="body"><dl>
+      <dt>技法</dt><dd>複素関数の定義域彩色（色相＝偏角、明度＝絶対値の対数の等高線）。<code>log z</code> は螺旋階段（ヘリコイド）にして、カメラが分岐点を回りながら階を上がる。</dd>
+      <dt>作り方</dt><dd>Blender でパラメトリック曲面を Python 生成、または GLSL でレイマーチ。クラインの壺は閉じた距離関数が知られていないので、メッシュで作ります。</dd>
+      <dt>使いどころ</dt><dd>「同じ場所に戻ったのに別の層にいる」は、起こらなかった可能性の世界の比喩として使えます。</dd>
+    </dl></div>
+  </details>
+
+  <details>
+    <summary><h3>H　ブロッホ球と色が抜ける瞬間</h3><span>重ね合わせが失われる場面</span></summary>
+    <div class="body"><dl>
+      <dt>技法</dt><dd>状態ベクトルが球面上に軌跡を残して回る。デコヒーレンスはベクトルが球の内側へ縮むこと。画面全体では位相の色相が抜けて灰色になり、干渉縞が消える。</dd>
+      <dt>作り方</dt><dd>数値は <a href="https://qutip.readthedocs.io/en/v5.1.1/guide/guide-bloch.html">QuTiP</a>（BSD）で出して CSV にし、TouchDesigner か After Effects に読み込む。色抜きは全ショット共通の HSV 調整に一つのパラメータとして持たせます。</dd>
+    </dl></div>
+  </details>
+
+  <h3>出力形態ごとの向き不向き</h3>
+  <div class="scroll"><table>
+    <tr><th>形態</th><th>向くショット</th><th>作り方の違い</th></tr>
+    <tr><td>縦型の短尺（15〜60 秒）</td><td>A か C を一つだけ</td><td>1080×1920。問い一つ、絵一つ。TouchDesigner から連番で書き出し、文字は After Effects</td></tr>
+    <tr><td>横型の作品（3〜8 分）</td><td>D → E → A → B → C の順</td><td>朗読を先に確定。ショット単位でオフライン書き出し、OTIO で編集へ</td></tr>
+    <tr><td>展示・リアルタイム</td><td>A・E・F（操作できる計算）</td><td>観客の位置を検出器 D に割り当てると、A は「見る場所が経路を決める」体験になります。仕上げに Notch を使うなら公開パラメータを OSC で駆動</td></tr>
+  </table></div>
+</section>
+
+<section id="film">
+  <h2>一本の完成形と台本</h2>
+  <p>横型・約 3 分の構成例です。台本は私が書いた叩き台で、秒数は朗読を合成して実測した値に置き換える前提です。日本語の朗読は 1 分あたり 300 字前後を目安に置き、全体の 2〜3 割を無音にしています（英語の目安 125〜150 語／分から私が置き換えた数字です）。</p>
+  <div class="scroll"><table>
+    <tr><th>秒</th><th>役割</th><th>朗読</th><th>絵</th><th>ショット</th></tr>
+    <tr><td>0–12</td><td>問い</td><td>（無音）</td><td>白地。一人が歩く。残像が帯になる</td><td>C</td></tr>
+    <tr><td>12–30</td><td>問い</td><td>あなたが選ばなかった道は、どこへ行ったのか。</td><td>帯が二つに、四つに分かれる。片方だけ濃い</td><td>C</td></tr>
+    <tr><td>30–55</td><td>文脈</td><td>数学には、形を伸ばしても縮めても変わらないものだけを数える見方がある。輪は輪のまま、絡みは絡みのまま残る。</td><td>円の束が現れ、どの二つも一度だけ絡む</td><td>D</td></tr>
+    <tr><td>55–80</td><td>主張</td><td>量子の世界では、状態は一つの点ではなく、可能性すべての重ね合わせとして書かれる。起きたことは、その影の一つにすぎない。</td><td>波束が二つの隙間を同時に抜ける。流線は交わらない</td><td>E</td></tr>
+    <tr><td>80–95</td><td>間</td><td>（無音）</td><td>色が抜け、縞が消える</td><td>H</td></tr>
+    <tr><td>95–125</td><td>論証</td><td>光は鏡で、入った角度と同じ角度で跳ね返る。まるで最短の道を先に知っていたかのように。けれど計算の上では、光は鏡のあらゆる点を試している。</td><td>一本の反射線が、無数の細い経路に開く。鏡の下で時計が回る</td><td>A</td></tr>
+    <tr><td>125–145</td><td>転回</td><td>遠回りの道は、消えたのではない。隣の道と打ち消し合っている。鏡を削ってやれば、そこからも光は届く。</td><td>鏡が縞状に欠け、端の経路が虹色に光りだす</td><td>A</td></tr>
+    <tr><td>145–170</td><td>総合</td><td>アリストテレスは、物事を「何のために」から説明する原因を目的因と呼んだ。終わりが道を選ぶ、という読み方は、いまも一つの解釈として残っている。</td><td>検出器の側から波がさかのぼり、光源の波と重なった所だけが光る</td><td>B</td></tr>
+    <tr><td>170–190</td><td>結び</td><td>選ばれなかった道は、選ばれた道の輪郭をつくっている。</td><td>光の経路の束が、冒頭の歩く人の樹に重なる。薄い枝は消えない</td><td>A→C</td></tr>
+  </table></div>
+  <div class="note">
+    <p><b>事実の扱いについて三点。</b></p>
+    <ul>
+      <li>目的因はアリストテレスの学説です。ソクラテスを登場させるなら、プラトン『パイドン』で「最善であること」による説明を求める場面が接点になります。</li>
+      <li>「光がすべての経路を通る」は計算の描像で、実在の主張としては異論があります。Veritasium の動画の回折格子の実演にも反論が出ています（<a href="https://rosetta.to/u/lookingglassuniverse/does-this-experiment-actually-prove-light-is-a-particle">Looking Glass Universe</a>）。台本では「計算の上では」としています。</li>
+      <li>最小作用を目的論と読むのはモーペルテュイ以来の伝統ですが、現代の物理哲学では因果ではない制約と読む立場が有力です（<a href="https://philsci-archive.pitt.edu/22269/">Glick 2023</a>）。</li>
+    </ul>
+  </div>
+</section>
+
+<section id="model">
+  <h2>制作モデル</h2>
+  <p>思いつきの対話から緻密な作品へ持っていくには、Claude に毎回同じ手順を踏ませる枠が要ります。公開事例の共通項をこの作品用に組み直しました。</p>
+  <h3>フォルダ構成</h3>
+<pre><code>film/
+├─ CLAUDE.md               全体の規則（下に例）
+├─ brief.md                主題・避けたい表現・参考動画の観察メモ
+├─ script.json             朗読の台本。区間 ID・本文・開始/終了秒・間
+├─ scene_plan.json         ショット表。script の区間 ID に結びつける
+├─ style.md                色・線・合成の約束（白地、墨、銅色は人物だけ 等）
+├─ library/                自作と許諾済みのシェーダー
+│   └─ catalog.json        1 ファイルごとに出典・ライセンス・タグ
+├─ shots/A_mirror/         ショットごとに shader.glsl, build.py, stills/, notes.md
+├─ audio/                  朗読 wav と単語の時刻 json
+├─ renders/                連番画像（git には入れない）
+├─ timeline.otio           編集ソフトに読ませるタイムライン
+└─ .claude/
+    ├─ skills/             td-shader, ae-comp, physics-check など
+    └─ agents/             critic.md, fact-checker.md</code></pre>
+
+  <h3>ショット表の 1 件</h3>
+<pre><code>{
+  "id": "A1",
+  "script_section_id": "s6",
+  "start_seconds": 95, "end_seconds": 125,
+  "narrative_role": "deliver_payload",
+  "description": "一本の反射線が無数の経路に開く。鏡の下に時計の列。右下にコルニュ螺旋。",
+  "tool": "touchdesigner",
+  "params": { "lambda_ratio": 0.03, "n_paths": 120, "scrape": false, "seed": 7 },
+  "physics_claims": ["L'(x)=0 で入射角=反射角", "合計の矢印はコルニュ螺旋になる"],
+  "acceptance": ["端の経路は見えるが暗い", "中央の束が画面で最も明るい", "文字なし"],
+  "status": "stills_approved"
+}</code></pre>
+  <p><code>description</code> は自由記述のまま残します。項目を細かく固定しすぎると絵の上限が下がる、という報告があります。</p>
+
+  <h3>CLAUDE.md の例</h3>
+<pre><code># この作品の規則
+- 作業は必ず scene_plan.json の 1 ショットを対象にする。ID と秒数を勝手に変えない。
+- 朗読が先。絵の長さは audio/ の実測時刻に合わせる。
+- TouchDesigner
+  - 既存の知識を信用しない。オペレータを作る前に get_docs / get_help で確認する。
+  - 作ったら get_errors（警告も読む）→ view_operator で画像を見る。黒い画面はシェーダーのエラーを疑う。
+  - 時刻は absTime.seconds を uniform で渡す。計算用テクスチャは rgba32float。
+  - Feedback TOP は先に作り、解像度を明示し、ループは最後に閉じる。
+  - 作り直す前に同名オペレータを消す。
+- After Effects
+  - ExtendScript は ES3（var と function のみ）。alert を出さない。beginUndoGroup で囲む。
+  - エフェクトは matchName、フォントは PostScript 名。呼び出しは直列。
+- 見る→直すは 1 ショット 3 回まで。越えたら状況を書いて止まる。
+- 物理の記述は physics_claims に書き、fact-checker の確認を通す。解釈は断定しない。
+- library/ に入れてよいのは自作か、catalog.json にライセンスを書けるものだけ。
+- 有料の生成を呼ぶ前に、見込みの費用を書いて承認を待つ。</code></pre>
+
+  <h3>役割の分け方</h3>
+  <div class="scroll"><table>
+    <tr><th>役割</th><th>担当</th><th>入力 → 出力</th></tr>
+    <tr><td>進行</td><td>Claude Code 本体</td><td>brief → script → scene_plan。各段で人の承認を取る</td></tr>
+    <tr><td>事実確認</td><td>別コンテキストのサブエージェント</td><td>台本と <code>physics_claims</code> → 誤り・言い過ぎの指摘と出典</td></tr>
+    <tr><td>シェーダー</td><td>ショットごとに 1 エージェント、1 ファイル</td><td>ショット表の 1 件 → <code>shader.glsl</code> と静止画</td></tr>
+    <tr><td>批評</td><td>制作過程を見ていないサブエージェント</td><td>静止画と <code>acceptance</code> → 重大／提案／些細の三段階</td></tr>
+    <tr><td>編集</td><td>Claude Code 本体</td><td>連番と音声 → <code>timeline.otio</code></td></tr>
+    <tr><td>最終判断</td><td>人</td><td>音、間、意味</td></tr>
+  </table></div>
+</section>
+
+<section id="prompts">
+  <h2>プロンプト</h2>
+  <h3>公開されている原文（リポジトリの README より）</h3>
+  <div class="scroll"><table>
+    <tr><th>対象</th><th>プロンプト</th><th>出典</th></tr>
+    <tr><td>TouchDesigner</td><td><code>Create a noise TOP, blur it, and end the chain in a null.</code></td><td>TDMCP</td></tr>
+    <tr><td>TouchDesigner</td><td><code>Create a feedback tunnel from noise with blur and displace, then add bloom and output it to a window.</code> → <code>make it warmer</code> → <code>add a feedback trail</code></td><td>Pantani/tdmcp</td></tr>
+    <tr><td>TouchDesigner</td><td><code>Why is my render black? Fix it.</code></td><td>TDPilot</td></tr>
+    <tr><td>After Effects</td><td><code>Create a 1920x1080 comp, 5 seconds, with a title that slides in, and show me a frame.</code></td><td>ae-motion</td></tr>
+    <tr><td>After Effects</td><td><code>Add expression controls to this null so I can drive all the text colors from one place</code></td><td>adobe-agent-skills</td></tr>
+    <tr><td>After Effects</td><td><code>Point out any issues in this AEP.</code></td><td>kumoproductions</td></tr>
+    <tr><td>Premiere</td><td><code>Export the active sequence as FCP XML.</code></td><td>hetpatel-11</td></tr>
+    <tr><td>Premiere</td><td><code>Edit this 5-minute video using script.pdf with the footage in /media/</code></td><td>ayushozha</td></tr>
+  </table></div>
+  <p>どれも短く、最後に「フレームを見せて」を付ける型が共通しています。長い一発の指示より、短い指示と確認の往復が前提です。</p>
+
+  <h3>この作品用の下書き（私が書いたもので、未検証です）</h3>
+<pre><code># ショット A を TouchDesigner に作る
+scene_plan.json の A1 を作ります。まず project_info と td-general スキルで現状を確認してください。
+/project1/A_mirror に次を作ります。
+1. GLSL TOP「field」1920x1080, rgba32float。shots/A_mirror/shader.glsl を Pixel Shader に入れる。
+   uniform: uS(vec2), uK(float), uTime(float=absTime.seconds), uScrape(float), uPhi0(float)
+   検出器の位置は画素座標。鏡は y=0、x は -1〜1。
+2. 経路の線は別の GLSL TOP「paths」。n_paths 本、色相=位相、明るさ=隣接 9 本の矢印の合計の長さ。
+3. Composite TOP で加算し、Null TOP「out」で終える。
+各段のあと get_errors を読み、view_operator で out を見せてください。
+acceptance を満たさない点を自分で挙げてから直すこと。3 回で止まってください。</code></pre>
+<pre><code># 事実確認（別コンテキストのサブエージェント）
+あなたは物理と哲学史の校閲者です。script.json と scene_plan.json の physics_claims を読み、
+(1) 誤り (2) 解釈を事実として述べている箇所 (3) 人名・年代の誤り を、該当 ID と直し案つきで挙げてください。
+確かめられないものは「未確認」と書き、推測で埋めないでください。</code></pre>
+<pre><code># 批評（制作過程を見ていないサブエージェント）
+shots/A_mirror/stills/ の 3 枚と、そのショットの description・acceptance だけを見てください。
+style.md に反する点、主題が読み取れない点、画面の端で切れている要素を、
+重大／提案／些細に分けて挙げてください。直し方は座標や数値で書いてください。</code></pre>
+<pre><code># Notch 用のカスタムシェーダー
+Notch のマニュアル MCP で「Custom Shader Post Effect」と「working with custom shaders」を検索し、
+生成された雛形 mirror.fx を読んでから、shots/A_mirror/shader.glsl を HLSL に移してください。
+波長・削る量・時間を propertyName / propertyMin / propertyMax 付きで公開します。
+保存すると Notch が再読込するので、変更は 1 か所ずつにしてください。</code></pre>
+<pre><code># タイムライン
+audio/words.json の実測時刻と scene_plan.json から timeline.otio を書いてください。
+映像は renders/&lt;id&gt;/ の連番、音声は audio/vo.wav。target_url に file:// を付けないこと。
+書いたら各クリップの開始・終了を表で見せ、台本の区間とのずれが 0.2 秒を超える所を挙げてください。</code></pre>
+</section>
+
+<section id="corpus">
+  <h2>再利用できる素材</h2>
+  <p>「ネットにあるものを全部学習してほしい」というご要望について。私はこの会話の中で自分自身を学習し直すことはできず、次の会話に知識を持ち越すこともできません。代わりに同じ効果を出す方法が、上の <code>library/</code> とスキルです。許諾のはっきりしたコードを手元に集め、Claude が毎回そこから近い例を 2〜3 本読んでから書く。公開事例でも、追加学習より「参照の棚＋規則ファイル」が主流でした。</p>
+  <div class="scroll"><table>
+    <tr><th>素材</th><th>中身</th><th>ライセンス</th><th>棚に入れてよいか</th></tr>
+    <tr><td><a href="https://github.com/Vidvox/ISF-Files">ISF-Files</a></td><td>生成・フィルタのシェーダー 200 余</td><td>MIT</td><td><span class="tag ok">可</span></td></tr>
+    <tr><td><a href="https://github.com/t3kt/raytk">RayTK</a></td><td>TouchDesigner のレイマーチング部品</td><td>CC BY 4.0</td><td><span class="tag ok">可・表示必須</span></td></tr>
+    <tr><td><a href="https://github.com/gokayfem/shader-skills">shader-skills</a></td><td>SDF 技法を書き直したエージェント用スキル</td><td>MIT</td><td><span class="tag ok">可</span></td></tr>
+    <tr><td><a href="https://github.com/bottobot/touchdesigner-mcp-server">bottobot の TD 資料 MCP</a></td><td>オペレータ 600 余の JSON、GLSL の型 16、ネットワークの雛形</td><td>MIT</td><td><span class="tag ok">可</span></td></tr>
+    <tr><td><a href="https://github.com/mwalczyk/hopf">mwalczyk/hopf</a></td><td>ホップ・ファイブレーション</td><td>CC BY 4.0</td><td><span class="tag ok">可・表示必須</span></td></tr>
+    <tr><td><a href="https://github.com/quantum-visualizations/qmsolve">qmsolve</a>／<a href="https://github.com/artmenlope/double-slit-2d-schrodinger">double-slit</a></td><td>シュレーディンガー方程式の数値計算</td><td>BSD-3／MIT</td><td><span class="tag ok">可</span></td></tr>
+    <tr><td><a href="https://github.com/roice3/Honeycombs">Honeycombs</a></td><td>双曲ハニカム</td><td>MIT</td><td><span class="tag ok">可</span></td></tr>
+    <tr><td>hg_sdf</td><td>SDF 関数集</td><td>2021 年以降の版は MIT 選択可</td><td><span class="tag un">版の冒頭を確認</span></td></tr>
+    <tr><td><a href="https://github.com/3b1b/videos">3b1b/videos</a></td><td>Manim のシーン（光学の回を含む）</td><td>CC BY-NC-SA 4.0</td><td><span class="tag no">読むだけ・非商用</span></td></tr>
+    <tr><td>Shadertoy</td><td>双曲タイル、四次元回転、立体射影など多数</td><td>既定は CC BY-NC-SA 3.0。作者ごとに違う</td><td><span class="tag no">読むだけ</span></td></tr>
+    <tr><td><a href="https://github.com/patriciogonzalezvivo/lygia">LYGIA</a></td><td>GLSL/HLSL の関数集</td><td>非商用か支援者向けの二本立て</td><td><span class="tag no">商用は要契約</span></td></tr>
+    <tr><td>non-euclidean_VR、DBraun/TouchDesigner_Shared</td><td>非ユークリッド描画、TD の作例集</td><td>GPL v3</td><td><span class="tag no">組み込むと同条件</span></td></tr>
+    <tr><td>The Book of Shaders</td><td>教科書</td><td>All rights reserved</td><td><span class="tag no">学ぶだけ</span></td></tr>
+  </table></div>
+  <ul>
+    <li>コードをそのまま写して使えるのは「可」の行だけです。「読むだけ」の行は、技法を理解して自分で書き直す分には問題ありません。</li>
+    <li>特定の作家の絵を集めて画風の追加学習（LoRA）をするのは、現状いちばん争いになりやすい使い方です。これは法的助言ではありません。</li>
+    <li><code>.toe</code> と <code>.dfx</code> はバイナリで Claude は直接読めません。TouchDesigner は <a href="https://github.com/dylanroscover/Embody">Embody</a> でテキストに書き出すと棚に入れられます。</li>
+  </ul>
+  <h3>絵の参照先</h3>
+  <ul>
+    <li>池田亮司「superposition」「supersymmetry」：白黒のデータ投影と同期した音。</li>
+    <li>Refik Anadol「Quantum Memories」：多世界を掲げた粒子と流体。</li>
+    <li>Markos Kay「Quantum Fluctuations」：粒子シミュレーションの重ね合わせ。</li>
+    <li>Maxime Causeret「<a href="https://vimeo.com/196269431">Order from Chaos</a>」：Houdini の反応拡散と成長。</li>
+    <li>Jos Leys ほか「<a href="https://www.dimensions-math.org/Dim_E.htm">Dimensions</a>」：立体射影とホップ・ファイブレーションの古典（CC BY-NC-ND、改変不可）。</li>
+  </ul>
+</section>
+
+<section id="gaps">
+  <h2>確認できなかったこと</h2>
+  <ul>
+    <li><b>Instagram の 5 本は見られませんでした。</b>このセッションのネットワーク設定で <code>www.instagram.com</code> が許可されておらず、検索でも内容を特定できていません。キャプションか画面収録をいただければ反映します。</li>
+    <li><b>直接読めたのは主に GitHub と Notch のマニュアルです。</b>Adobe・Derivative の公式ブログ、Zenn、Qiita、note、Shadertoy 本体は読めず、検索結果の要約に頼っています。Shadertoy の個別のライセンス表記は未確認です。</li>
+    <li><b>科学・哲学のエッセイ映像や GLSL の抽象作品を、エージェントで最後まで作った公開の舞台裏は見つかりませんでした。</b>近いのは、コードだけで作った短編（<a href="https://github.com/ericfu-tianchi/claude-video">claude-video</a>）、解説動画の量産パイプライン（<a href="https://github.com/calesthio/OpenMontage">OpenMontage</a>）、Manim の制作手順（<a href="https://github.com/Yusuke710/manim-skill">manim-skill</a>）です。上の制作モデルはそれらの型をこの主題に当てはめたものです。</li>
+    <li><b>この環境には TouchDesigner・After Effects・Notch がありません。</b>MCP の接続、下書きのプロンプト、GLSL の TouchDesigner 上での動作は試せていません。冒頭の図は同じ式をブラウザで動かしたものです。</li>
+    <li><b>Higgsfield の After Effects 連携</b>（有料、ベンダー発信の情報のみ）と、Veo の提供形態の変更は、要約でしか見ていません。使う前に公式ページで確認してください。</li>
+  </ul>
+  <h3>最初の一週間でやること</h3>
+  <ol>
+    <li>TouchDesigner 2025.33230 以降に TDMCP と TDMCPSkills を入れ、<code>Create a noise TOP, blur it, and end the chain in a null.</code> で接続を確かめる。</li>
+    <li>ショット A の GLSL を貼り、波長と「削る」を動かして静止画を 3 枚出す。</li>
+    <li>上のフォルダ構成と CLAUDE.md を置き、台本の叩き台を自分の言葉に直す。</li>
+    <li>ショット C 用に、白い壁の前を歩く自分を横から 10 秒撮る。</li>
+  </ol>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var sc=document.getElementById('scene'), sp=document.getElementById('spiral');
+  var lam=document.getElementById('lam'), scrape=document.getElementById('scrape'), spin=document.getElementById('spin'), pow=document.getElementById('pow');
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var t=0, raf=0, N=600, S={x:.1,y:.34}, D={x:.9,y:.34};
+  function tok(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+  function fit(c,h){var d=Math.min(window.devicePixelRatio||1,2),w=c.clientWidth;c.width=Math.round(w*d);c.height=Math.round(h*d);c.style.height=h+'px';var g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);return {g:g,w:w,h:h}}
+  function L(x){return Math.hypot(x-S.x,S.y)+Math.hypot(x-D.x,D.y)}
+  function compute(k,cut,wt){
+    var dx=1/N, re=new Float64Array(N), im=new Float64Array(N), keep=new Uint8Array(N), ph=new Float64Array(N), phi0=k*L(.5);
+    for(var j=0;j<N;j++){var x=(j+.5)*dx, l=L(x), p=k*l-wt; ph[j]=p;
+      keep[j]=(!cut||Math.cos(k*l-phi0)>0)?1:0;
+      re[j]=keep[j]*dx*Math.cos(p); im[j]=keep[j]*dx*Math.sin(p)}
+    return {re:re,im:im,keep:keep,ph:ph}
+  }
+  function total(a){var r=0,i=0;for(var j=0;j<N;j++){r+=a.re[j];i+=a.im[j]}return r*r+i*i}
+  function hue(p){var h=((p/6.2831853)%1+1)%1;return Math.round(h*360)}
+  function draw(){
+    var k=2*Math.PI/(lam.value/1000), cut=scrape.checked, a=compute(k,cut,t), ink=tok('--ink'), ink2=tok('--ink2'), acc=tok('--accent'), rule=tok('--rule');
+    var dark=tok('--paper').toLowerCase()==='#0e1114', lum=dark?'68%':'42%';
+    // scene
+    var pad=14, w0=sc.clientWidth, s=w0-2*pad, my=s*S.y+34, c=fit(sc,my+46), g=c.g;
+    function X(x){return pad+x*s} function Y(y){return my-y*s}
+    var np=Math.max(24,Math.floor(w0/9)), M=Math.round(N/np*1.5);
+    g.lineWidth=1;
+    for(var i=0;i<np;i++){var j=Math.floor((i+.5)/np*N), r=0,q=0,n=0;
+      for(var m=Math.max(0,j-M);m<=Math.min(N-1,j+M);m++){r+=Math.cos(a.ph[m]);q+=Math.sin(a.ph[m]);n++}
+      var coh=Math.hypot(r,q)/n, al=cut?(a.keep[j]?.7:.03):Math.max(.05,Math.pow(coh,1.3)*.95), x=(j+.5)/N;
+      g.strokeStyle='hsla('+hue(a.ph[j])+',70%,'+lum+','+al+')';
+      g.beginPath();g.moveTo(X(S.x),Y(S.y));g.lineTo(X(x),my);g.lineTo(X(D.x),Y(D.y));g.stroke();
+      // clock
+      var cy=my+22, rr=Math.min(7,s/np*.42);
+      g.strokeStyle=rule;g.beginPath();g.arc(X(x),cy,rr,0,6.2832);g.stroke();
+      if(!cut||a.keep[j]){g.strokeStyle='hsl('+hue(a.ph[j])+',70%,'+lum+')';g.beginPath();g.moveTo(X(x),cy);g.lineTo(X(x)+rr*Math.cos(a.ph[j]),cy-rr*Math.sin(a.ph[j]));g.stroke()}
+    }
+    // mirror
+    g.lineWidth=3;g.strokeStyle=ink;
+    for(var j2=0;j2<N;j2++){if(a.keep[j2]){g.beginPath();g.moveTo(X(j2/N),my);g.lineTo(X((j2+1)/N)+.5,my);g.stroke()}}
+    g.fillStyle=ink;g.beginPath();g.arc(X(S.x),Y(S.y),5,0,6.2832);g.fill();
+    g.fillStyle=acc;g.beginPath();g.arc(X(D.x),Y(D.y),6,0,6.2832);g.fill();
+    g.fillStyle=ink2;g.font='12px '+tok('--body');g.textBaseline='bottom';
+    g.textAlign='left';g.fillText('光源',X(S.x)-10,Y(S.y)-10);g.textAlign='right';g.fillText('検出器',X(D.x)+14,Y(D.y)-11);
+    g.textAlign='left';g.textBaseline='top';g.fillText('鏡',pad,my+6-1+30);
+    // spiral
+    var sw=sp.clientWidth, c2=fit(sp,sw), h=c2.g, px=[0],py=[0],rx=0,ry=0,minx=0,maxx=0,miny=0,maxy=0;
+    for(var j3=0;j3<N;j3++){rx+=a.re[j3];ry+=a.im[j3];px.push(rx);py.push(ry);if(rx<minx)minx=rx;if(rx>maxx)maxx=rx;if(ry<miny)miny=ry;if(ry>maxy)maxy=ry}
+    var ext=Math.max(maxx-minx,maxy-miny,1e-9), z=(sw-36)/ext, ox=18-minx*z+((sw-36)-(maxx-minx)*z)/2, oy=sw-18+miny*z-((sw-36)-(maxy-miny)*z)/2;
+    h.lineWidth=1.3;
+    for(var j4=0;j4<N;j4++){if(!a.keep[j4])continue;h.strokeStyle='hsl('+hue(a.ph[j4])+',70%,'+lum+')';h.beginPath();h.moveTo(ox+px[j4]*z,oy-py[j4]*z);h.lineTo(ox+px[j4+1]*z,oy-py[j4+1]*z);h.stroke()}
+    h.strokeStyle=acc;h.lineWidth=3;h.beginPath();h.moveTo(ox,oy);h.lineTo(ox+rx*z,oy-ry*z);h.stroke();
+    h.fillStyle=acc;h.beginPath();h.arc(ox+rx*z,oy-ry*z,4,0,6.2832);h.fill();
+    var base=total(compute(k,false,0));pow.textContent='×'+(total(a)/base).toFixed(1);
+  }
+  function loop(){t+=.05;draw();raf=spin.checked?requestAnimationFrame(loop):0}
+  function kick(){if(spin.checked){if(!raf)raf=requestAnimationFrame(loop)}else{draw()}}
+  lam.addEventListener('input',kick);scrape.addEventListener('change',kick);spin.addEventListener('change',kick);
+  window.addEventListener('resize',draw);
+  if(window.matchMedia){var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',draw)}
+  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+  spin.checked=false;draw();
+})();
+</script>
