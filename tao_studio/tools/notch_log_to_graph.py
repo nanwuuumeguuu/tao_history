@@ -91,10 +91,24 @@ def learn_modes(runs):
         MODES[key] = c.most_common(1)[0][0] if sum(c.values()) >= 3 else None
 
 
+def num(v):
+    return v[0] if isinstance(v, list) else v
+
+
 def fmt(v):
-    if isinstance(v, list):
-        return str(v[1])
-    return f"{v:g}" if isinstance(v, (int, float)) else str(v)
+    if isinstance(v, list):                       # [数値, 文字列]。複数成分なら文字列のほうが情報が多い
+        return str(v[1]) if "," in str(v[1]) else f"{v[0]:.4g}"
+    return f"{v:.4g}" if isinstance(v, (int, float)) else str(v)
+
+
+def is_plain(key, v):
+    """同じ種類の見本が少なくて最頻値が分からないとき用の、控えめな既定値の判定。"""
+    if key.startswith("Parent Transform."):
+        return True
+    x = num(v)
+    if key.startswith("Transform.") and isinstance(x, (int, float)):
+        return abs(x - (1.0 if "Scale" in key else 0.0)) < 1e-6
+    return False
 
 
 def label(n):
@@ -103,11 +117,15 @@ def label(n):
     s = n["name"] if n["name"] == short else f'{n["name"]}  [{t}]'
     if n.get("visible") is False:
         s += "  (非表示)"
-    props = n.get("props") or {}
-    odd = [(k, v) for k, v in props.items() if MODES.get((t, k)) != json.dumps(v)]
+    odd = []
+    for k, v in (n.get("props") or {}).items():
+        mode = MODES.get((t, k))
+        if (is_plain(k, v) if mode is None else mode == json.dumps(v)):
+            continue
+        odd.append((k, v))
     if odd:
-        shown = ", ".join(f"{k.split('.', 1)[-1]}: {fmt(v)}" for k, v in odd[:10])
-        s += f"  ({shown}{' …' if len(odd) > 10 else ''})"
+        shown = ", ".join(f"{k.split('.', 1)[-1]}: {fmt(v)}" for k, v in odd[:12])
+        s += f"  ({shown}{' …他' + str(len(odd) - 12) if len(odd) > 12 else ''})"
     return s
 
 
