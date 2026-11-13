@@ -78,15 +78,36 @@ def slug(name):
     return re.sub(r"[^0-9A-Za-z]+", "-", s).strip("-").lower() or "project"
 
 
+MODES = {}   # (種類, パラメータ名) -> ログ全体で最も多い値。既定値の代わりに使う
+
+
+def learn_modes(runs):
+    seen = {}
+    for r in runs:
+        for n in r["nodes"]:
+            for k, v in (n.get("props") or {}).items():
+                seen.setdefault((n.get("type"), k), Counter())[json.dumps(v)] += 1
+    for key, c in seen.items():
+        MODES[key] = c.most_common(1)[0][0] if sum(c.values()) >= 3 else None
+
+
+def fmt(v):
+    if isinstance(v, list):
+        return str(v[1])
+    return f"{v:g}" if isinstance(v, (int, float)) else str(v)
+
+
 def label(n):
     t = n.get("type", "?")
     short = t.split("::")[-1]
     s = n["name"] if n["name"] == short else f'{n["name"]}  [{t}]'
     if n.get("visible") is False:
         s += "  (非表示)"
-    if n.get("props"):
-        s += "  (" + ", ".join(f"{k}: {v:g}" if isinstance(v, (int, float)) else f"{k}: {v}"
-                               for k, v in n["props"].items()) + ")"
+    props = n.get("props") or {}
+    odd = [(k, v) for k, v in props.items() if MODES.get((t, k)) != json.dumps(v)]
+    if odd:
+        shown = ", ".join(f"{k.split('.', 1)[-1]}: {fmt(v)}" for k, v in odd[:10])
+        s += f"  ({shown}{' …' if len(odd) > 10 else ''})"
     return s
 
 
@@ -140,7 +161,8 @@ def write(d, out, project):
     if d.get("broken"):
         md.append(f"- **注意: 読めなかった行が {d['broken']} 件あります。**")
     md += ["- 含まれるもの: ノード名、種類、親子のつながり、埋め込み、表示状態",
-           "- 含まれないもの: パラメータの値（TAO_PROPS に書いた分だけ）、キーフレーム、プロパティへの入力接続", ""]
+           "- 値: 第3版のスクリプトで書き出した場合、同じ種類のノードで最も多い値と違うものだけを括弧内に示す（全部の値は .json にある）",
+           "- 含まれないもの: キーフレーム、プロパティへの入力接続", ""]
     for layer in d["layers"]:
         nodes = [n for n in d["nodes"] if n["layer"] == layer["index"]]
         md += [f"## レイヤー {layer['index']}: {layer['name']}（{len(nodes)} ノード）", ""]
@@ -168,6 +190,7 @@ def main():
     a = ap.parse_args()
     out = Path(a.out) if a.out else Path(__file__).resolve().parent.parent / "raw" / "workshop" / a.course / "graphs"
     runs = read_runs(a.log)
+    learn_modes(list(best_per_doc(runs).values()))
     if a.project:
         write(runs[-1], out, a.project)
     else:
