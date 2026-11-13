@@ -4,7 +4,7 @@
 // Exposable Array の各要素の位置・回転・色に書き込む。Array Cloner がそれを矢印として並べる。
 // 作り方は techniques/T-013_notch-phase-arrows-build.md。
 //
-// Notch 上では未検証。数式は鏡の図（制作ノートのページ）と同じもの。
+// Notch 1.0.2.034 Trial で動作確認済み（2026-11-13）。数式は鏡の図（制作ノートのページ）と同じもの。
 
 var ARRAY_NAME = "Exposable Array";  // 書き込む先のノード名
 var N = 81;          // 矢印の本数。Exposable Array の Num Transforms と Array Cloner の Num Clones をこの数以上に
@@ -15,8 +15,8 @@ var LAMBDA = 0.6;    // 波長。見やすいように大きく誇張してあ�
                      // （小さくしすぎると、隣との差が半回転を超えて向きの流れが読めなくなる。そのときは N を増やす）
 var SPEED = 0.25;    // 1 秒あたりの回転数。0 にすると止まる
 var SIZE = 0.15;     // 矢印の大きさ
-var ROT_SLOT = 2;    // 位相を入れる回転の成分（0, 1, 2）。画面の中で時計のように回らなければ変えてみる
-var USE_DEGREES = false;  // 回転が小さすぎて動いて見えないときは true に
+var ROT_SLOT = 2;    // 位相を入れる回転の成分（0, 1, 2）。2 が正面から見て時計回りの面（確認済み）
+var USE_DEGREES = true;   // Notch 1.0.2.034 で確認：回転は「度」で渡す
 var SCRAPE = false;  // true で「打ち消す部分の鏡を削る」。削られた所の矢印は大きさ 0 になる
 var COLOUR = true;   // 位相を色相にして色を書き込む（Array Cloner の Colour Clones を ON に）
 
