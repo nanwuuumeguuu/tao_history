@@ -62,11 +62,13 @@ def read_dump(path):
 
 
 def best_per_doc(runs):
-    """プロジェクトごとに、完了した最後の書き出し（無ければ最後の書き出し）を選ぶ。"""
+    """プロジェクトごとに、完了していて版が新しい最後の書き出しを選ぶ。「- コピー」は同じプロジェクトとみなす。"""
     out = {}
     for r in runs:
-        k = r["doc"] or "unknown"
-        if k not in out or r["complete"] or not out[k]["complete"]:
+        k = slug(r["doc"] or "unknown")
+        old = out.get(k)
+        rank = (r["complete"], r["meta"].get("script", 0))
+        if old is None or rank >= (old["complete"], old["meta"].get("script", 0)):
             out[k] = r
     return out
 
@@ -201,19 +203,21 @@ def write(d, out, project):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("log")
+    ap.add_argument("log", nargs="+", help="ログファイル。複数渡すと、プロジェクトごとに最も新しい完了分を選ぶ")
     ap.add_argument("--course", required=True)
     ap.add_argument("--project", help="1 本だけ書き出すときの名前。省くと、ログ中の全プロジェクトを書き出す")
     ap.add_argument("--out", help="出力先（既定は raw/workshop/<course>/graphs）")
     a = ap.parse_args()
     out = Path(a.out) if a.out else Path(__file__).resolve().parent.parent / "raw" / "workshop" / a.course / "graphs"
-    runs = read_runs(a.log)
+    runs = []
+    for path in a.log:
+        runs += read_runs(path)
     learn_modes(list(best_per_doc(runs).values()))
     if a.project:
         write(runs[-1], out, a.project)
     else:
-        for doc, d in best_per_doc(runs).items():
-            write(d, out, slug(doc))
+        for name, d in best_per_doc(runs).items():
+            write(d, out, name)
 
 
 if __name__ == "__main__":
