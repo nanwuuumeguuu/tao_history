@@ -1,0 +1,14 @@
+id: C-0010
+text: 人類は、天体の観測や地動説をきっかけに、平面的な見方を脱して 3 次元を考えるようになった。
+origin: 2026-11-13 のチャット
+claim_type: FACT
+status: unverified
+confidence: unlikely
+evidence_for: []
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 科学史の主張。そのままでは言い過ぎの可能性が高い。立体の幾何学はユークリッド『原論』にあり、地球が球であることは古代ギリシアで論じられていた。地動説（コペルニクス、1543 年）が変えたのは「どこを中心に据えるか」という視点である。「視点を一つ外に出すと、複雑な動きが単純になる」という形に言い直せば、次元を一つ足す話の導入として使える。出典未記入。

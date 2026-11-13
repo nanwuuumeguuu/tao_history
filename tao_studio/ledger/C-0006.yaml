@@ -1,0 +1,18 @@
+id: C-0006
+text: 正反射の経路の近くだけを残して鏡を細くすると、光はまっすぐ反射せず広がってしまう。
+origin: 2026-11-13 のチャット（「残った直線の線の面だけを残して光子を反射させても、すべて分散してしまう」）
+claim_type: THEORY
+status: unverified
+confidence: highly likely
+evidence_for:
+  - ref: "techniques/T-001 の数値計算（自作）。幅 0.02 で検出器の明るさ 0.02 倍、広がりは約 5 倍"
+    quote:
+  - ref: "R. P. Feynman, QED (1985) 第2章（狭い隙間で光が広がる話）"
+    quote:
+evidence_against: []
+warrant: 残す幅が第一フレネル帯より狭いと、方向を決める打ち消し合いが起こらず、回折で広がる。
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 条件つきで正しい。「細い」がフレネル帯の幅より狭いときに限る。それより広ければ、端を切っても反射はほぼ変わらない（幅 0.6 で 0.997 倍）。Feynman の原文の引用を埋めるまで unverified。

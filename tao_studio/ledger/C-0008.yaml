@@ -1,0 +1,14 @@
+id: C-0008
+text: 量子力学の計算は 5 次元や 8 次元にまで到達している。
+origin: 2026-11-13 のチャット
+claim_type: FACT
+status: unverified
+confidence:
+evidence_for: []
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 「次元」が何を指すかで別の主張になる。本人に出どころを確認すること。候補：(1) 状態空間の次元。量子ビット 1 個は複素 2 次元＝実 4 次元、2 個は複素 4 次元＝実 8 次元。n 個なら複素 2^n 次元。これは標準的な内容。(2) 空間の次元を 5 にする理論はカルツァ＝クライン理論（1921 年、重力と電磁気の統一の試み）で、量子力学そのものではない。(3) 弦理論の 10・11 次元は未検証の仮説。出典未記入。

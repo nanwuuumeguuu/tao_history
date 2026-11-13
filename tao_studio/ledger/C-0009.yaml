@@ -1,0 +1,14 @@
+id: C-0009
+text: 虚数 i を使った次元を考えるようになることが、次の科学のなすべきことである。
+origin: 2026-11-13 のチャット
+claim_type: METAPHYSICAL
+status: cannot-judge
+confidence:
+evidence_for: []
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 価値の主張なので真偽は問わない。ただし前提の事実は整理が要る。複素数は量子力学で 1920 年代から中心的に使われており、「これから」ではない。「虚数次元」という標準の用語は無く、近いのは複素次元（glossary 参照）と虚時間。作品の主題としては「実数しか知らない者に複素数の向きを伝える」と言い直すと、事実の土台の上に立つ。

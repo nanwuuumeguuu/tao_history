@@ -1,0 +1,14 @@
+id: C-0007
+text: 実際の経路が残るのは、無い（見えない）経路があるからである。
+origin: 2026-11-13 のチャット
+claim_type: INTERPRETATION
+status: contested
+confidence: possible
+evidence_for: []
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 二つに分けて言い直す。(a) 隣り合う経路の足し合わせがあって初めて直進・正反射が成り立つ＝THEORY（C-0006）。(b) 遠くの経路は互いに打ち消し合って見えないだけで、鏡を削れば現れる＝THEORY（C-0002 と回折格子）。「遠い経路が無いと実際の経路が残らない」は誤りで、遠い経路は切っても結果は変わらない。作品では「隣の経路が道を立て、遠くの経路は消えずに打ち消し合っている」と書く。

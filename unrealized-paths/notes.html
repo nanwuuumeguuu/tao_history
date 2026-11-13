@@ -87,14 +87,25 @@ dt{font-weight:700;color:var(--ink2);font-size:.82rem;padding-top:.15em} dd{marg
         <div class="cap">矢印を順につなぐと両端が渦を巻きます（コルニュ螺旋）。太い線が合計で、その長さの二乗が検出器の明るさです。</div>
       </div>
     </div>
+    <div>
+      <canvas id="beam" aria-label="残した鏡から反射した光が空間のどこに届くかを示す明るさの分布"></canvas>
+      <div class="cap">反射した光が届く場所の明るさ。鏡の幅を狭めていくと、光の束はいったん細くなり、ある幅（上の図の濃い線の束の幅ほど）を切ると、逆に四方へ広がって薄くなります。</div>
+    </div>
     <div class="ctl">
       <label for="lam">波長 <input id="lam" type="range" min="8" max="60" value="26"></label>
+      <label for="wid">鏡の幅 <input id="wid" type="range" min="1" max="100" value="100"></label>
       <label for="scrape"><input id="scrape" type="checkbox"> 打ち消す部分の鏡を削る</label>
       <label for="spin"><input id="spin" type="checkbox"> 時間を進める</label>
       <span class="read">検出器の明るさ <b id="pow">×1.0</b></span>
     </div>
   </div>
-  <p>「鏡を削る」を入れると、逆向きの矢印を持つ経路だけが消え、端の経路まで光りはじめます。選ばれなかった経路は存在しなかったのではなく、互いに打ち消し合っていただけだ、という絵になります。この計算は 20 行ほどの GLSL でそのまま TouchDesigner に移せます（<a href="#shots">ショット A</a>）。</p>
+  <p>この図で確かめられることが三つあります。</p>
+  <ul>
+    <li><b>遠回りの経路は、無くても結果が変わらない。</b>鏡の幅を半分ほどに狭めても、検出器の明るさは同じ程度のままです（幅によって ×0.8〜1.3 の間で揺れます）。端の経路は互いに打ち消し合っていて、もともと合計にほとんど効いていません。</li>
+    <li><b>隣の経路まで奪うと、まっすぐな反射そのものが壊れる。</b>幅をさらに狭めて濃い線の束より細くすると、明るさは急に落ち（幅 6% で ×0.2）、残った光は決まった方向を失って広がります。「一本の正しい経路」だけを残すことはできません。直進や正反射は、隣り合う経路どうしの足し合わせで初めて成り立っています。</li>
+    <li><b>消えていた経路は、存在している。</b>「鏡を削る」を入れると、逆向きの矢印を持つ部分だけが取り除かれ、端の経路が光りだします。</li>
+  </ul>
+  <p>つまり「無い経路があるからこそ実際の経路が残る」は、正確には<b>「隣の経路があるからこそ実際の経路が立ち、遠くの経路は打ち消し合って見えないだけで、そこにある」</b>となります。この計算は 20 行ほどの GLSL でそのまま TouchDesigner に移せます（<a href="#shots">ショット A</a>）。</p>
 
   <nav aria-label="目次"><ol>
     <li><a href="#now">いま可能なこと</a></li>
@@ -669,16 +680,17 @@ around his or her thoughts and beliefs.</code></pre>
 <script>
 (function(){
   var sc=document.getElementById('scene'), sp=document.getElementById('spiral');
+  var bm=document.getElementById('beam'), wid=document.getElementById('wid');
   var lam=document.getElementById('lam'), scrape=document.getElementById('scrape'), spin=document.getElementById('spin'), pow=document.getElementById('pow');
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var t=0, raf=0, N=600, S={x:.1,y:.34}, D={x:.9,y:.34};
   function tok(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
   function fit(c,h){var d=Math.min(window.devicePixelRatio||1,2),w=c.clientWidth;c.width=Math.round(w*d);c.height=Math.round(h*d);c.style.height=h+'px';var g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);return {g:g,w:w,h:h}}
   function L(x){return Math.hypot(x-S.x,S.y)+Math.hypot(x-D.x,D.y)}
-  function compute(k,cut,wt){
+  function compute(k,cut,wt,full){
     var dx=1/N, re=new Float64Array(N), im=new Float64Array(N), keep=new Uint8Array(N), ph=new Float64Array(N), phi0=k*L(.5);
     for(var j=0;j<N;j++){var x=(j+.5)*dx, l=L(x), p=k*l-wt; ph[j]=p;
-      keep[j]=(!cut||Math.cos(k*l-phi0)>0)?1:0;
+      keep[j]=((!cut||Math.cos(k*l-phi0)>0)&&(full||Math.abs(x-.5)<=wid.value/200))?1:0;
       re[j]=keep[j]*dx*Math.cos(p); im[j]=keep[j]*dx*Math.sin(p)}
     return {re:re,im:im,keep:keep,ph:ph}
   }
@@ -694,7 +706,7 @@ around his or her thoughts and beliefs.</code></pre>
     g.lineWidth=1;
     for(var i=0;i<np;i++){var j=Math.floor((i+.5)/np*N), r=0,q=0,n=0;
       for(var m=Math.max(0,j-M);m<=Math.min(N-1,j+M);m++){r+=Math.cos(a.ph[m]);q+=Math.sin(a.ph[m]);n++}
-      var coh=Math.hypot(r,q)/n, al=cut?(a.keep[j]?.7:.03):Math.max(.05,Math.pow(coh,1.3)*.95), x=(j+.5)/N;
+      var coh=Math.hypot(r,q)/n, al=!a.keep[j]?.03:(cut?.7:Math.max(.05,Math.pow(coh,1.3)*.95)), x=(j+.5)/N;
       g.strokeStyle='hsla('+hue(a.ph[j])+',70%,'+lum+','+al+')';
       g.beginPath();g.moveTo(X(S.x),Y(S.y));g.lineTo(X(x),my);g.lineTo(X(D.x),Y(D.y));g.stroke();
       // clock
@@ -718,15 +730,35 @@ around his or her thoughts and beliefs.</code></pre>
     for(var j4=0;j4<N;j4++){if(!a.keep[j4])continue;h.strokeStyle='hsl('+hue(a.ph[j4])+',70%,'+lum+')';h.beginPath();h.moveTo(ox+px[j4]*z,oy-py[j4]*z);h.lineTo(ox+px[j4+1]*z,oy-py[j4+1]*z);h.stroke()}
     h.strokeStyle=acc;h.lineWidth=3;h.beginPath();h.moveTo(ox,oy);h.lineTo(ox+rx*z,oy-ry*z);h.stroke();
     h.fillStyle=acc;h.beginPath();h.arc(ox+rx*z,oy-ry*z,4,0,6.2832);h.fill();
-    var base=total(compute(k,false,0));pow.textContent='×'+(total(a)/base).toFixed(1);
+    var base=total(compute(k,false,0,true));pow.textContent='×'+(total(a)/base).toFixed(1);
   }
+  // 反射光の広がり: 各点を検出器とみなして |A|^2 を計算する
+  function drawBeam(){
+    var k=2*Math.PI/(lam.value/1000), cut=scrape.checked, M=320, dx=1/M, phi0=k*L(.5), xs=[], r1=[];
+    for(var j=0;j<M;j++){var x=(j+.5)*dx;
+      if((!cut||Math.cos(k*L(x)-phi0)>0)&&Math.abs(x-.5)<=wid.value/200){xs.push(x);r1.push(Math.hypot(x-S.x,S.y))}}
+    var ref=0,rr=0,ri=0;for(var j2=0;j2<M;j2++){var l=L((j2+.5)*dx);rr+=Math.cos(k*l)*dx;ri+=Math.sin(k*l)*dx}ref=rr*rr+ri*ri;
+    var pad=14,w0=bm.clientWidth,s=w0-2*pad,my=s*S.y+34,c=fit(bm,my+12),g=c.g,acc=tok('--accent'),ink=tok('--ink'),ink2=tok('--ink2');
+    var GX=Math.max(60,Math.min(130,Math.floor(w0/7))),GY=Math.round(GX*.4),cw=s/GX,ch=(s*.38)/GY;
+    g.fillStyle=acc;
+    for(var gy=0;gy<GY;gy++){var py=(gy+.5)/GY*.38;
+      for(var gx=0;gx<GX;gx++){var px=(gx+.5)/GX,re=0,im=0;
+        for(var m=0;m<xs.length;m++){var ph=k*(r1[m]+Math.hypot(xs[m]-px,py));re+=Math.cos(ph);im+=Math.sin(ph)}
+        var v=Math.min(1,Math.sqrt((re*re+im*im)*dx*dx/ref)*.75);
+        if(v>.02){g.globalAlpha=v;g.fillRect(pad+gx*cw,my-(gy+1)*ch,cw+.5,ch+.5)}}}
+    g.globalAlpha=1;g.strokeStyle=ink;g.lineWidth=3;
+    for(var m2=0;m2<xs.length;m2++){g.beginPath();g.moveTo(pad+(xs[m2]-dx/2)*s,my);g.lineTo(pad+(xs[m2]+dx/2)*s+.5,my);g.stroke()}
+    g.fillStyle=ink;g.beginPath();g.arc(pad+S.x*s,my-S.y*s,5,0,6.2832);g.fill();
+    g.strokeStyle=ink2;g.lineWidth=1.5;g.beginPath();g.arc(pad+D.x*s,my-D.y*s,6,0,6.2832);g.stroke();
+  }
+  var bt=0;function beamSoon(){clearTimeout(bt);bt=setTimeout(drawBeam,60)}
   function loop(){t+=.05;draw();raf=spin.checked?requestAnimationFrame(loop):0}
-  function kick(){if(spin.checked){if(!raf)raf=requestAnimationFrame(loop)}else{draw()}}
-  lam.addEventListener('input',kick);scrape.addEventListener('change',kick);spin.addEventListener('change',kick);
-  window.addEventListener('resize',draw);
-  if(window.matchMedia){var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',draw)}
-  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  function kick(){beamSoon();if(spin.checked){if(!raf)raf=requestAnimationFrame(loop)}else{draw()}}
+  lam.addEventListener('input',kick);wid.addEventListener('input',kick);scrape.addEventListener('change',kick);spin.addEventListener('change',function(){if(spin.checked){if(!raf)raf=requestAnimationFrame(loop)}else{draw()}});
+  window.addEventListener('resize',function(){draw();beamSoon()});
+  if(window.matchMedia){var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){draw();drawBeam()})}
+  new MutationObserver(function(){draw();drawBeam()}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  spin.checked=false;draw();
+  spin.checked=false;draw();drawBeam();
 })();
 </script>
