@@ -14,6 +14,7 @@
 | Feynman, QED（1985）／オークランド講義（1979） | feynman.com | 鏡の反射、回る矢印、鏡を削る話、狭い隙間で光が広がる話 |
 | Taylor ほか（1998） | eftaylor.com/feynman.html | 経路の和をコルニュ螺旋として描く教材 |
 | Veritasium「光はすべての経路を通る」 | veritasium.com | 実演。回折格子の解釈に反論あり（Looking Glass Universe） |
+| Wen ほか「Direct experimental test of Feynman's path integral postulates with single photons」（Science Advances） | doi.org/10.1126/sciadv.aeh1011 | 経路ごとの振幅を測定値から組み立てて公準を検証した実験。本文未読（C-0011） |
 | 3Blue1Brown の光学の回 | 3blue1brown.com | 位相の足し合わせの見せ方 |
 
 ## 地に足をつけるための文献

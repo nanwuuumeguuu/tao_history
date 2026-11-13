@@ -1,0 +1,22 @@
+id: C-0011
+text: 単一光子の実験で、経路積分の個々の経路の確率振幅が測定され、ファインマンの二つの公準が検証された。
+origin: 2026-11-13 のチャット（共有された論文と紹介記事）
+claim_type: FACT
+status: unverified
+confidence: likely
+source_reliability: B
+info_credibility: 2
+evidence_for:
+  - ref: "Yong-Li Wen ほか, Direct experimental test of Feynman's path integral postulates with single photons, Science Advances, doi:10.1126/sciadv.aeh1011（華南師範大学 Shi-Liang Zhu のグループ）"
+    quote:
+  - ref: "https://physicsworld.com/a/single-photon-measurements-confirm-richard-feynmans-vision-of-quantum-mechanics/"
+    quote:
+  - ref: "https://phys.org/news/2026-08-physicists-feynman-path.html"
+    quote:
+evidence_against: []
+warrant:
+verified_by:
+verified_on:
+recheck_after:
+used_in: []
+note: 論文本文と紹介記事は開けず、検索結果の要約だけを見た。要約によれば、離散的な格子上の 1,419,857 本の経路について振幅を求め、第一公準を忠実度 94.9%、第二公準を 94.7% で確認。方法は、伝播関数を区間ごとに測り、5 区間の値を掛け合わせて経路全体の振幅を組み立てるもの。つまり「一本ずつの経路を光子が通るのを見た」のではなく、「経路ごとの振幅を測定値から組み立て、その和が理論どおりになることを確かめた」と読める。解説記事の一つは、光子が物理的にすべての経路を通ることを示したわけではないと注記している。C-0003（解釈）の状態は変えない。本文を読んで quote を埋めること。
